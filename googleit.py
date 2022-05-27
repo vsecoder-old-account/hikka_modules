@@ -13,7 +13,7 @@
 __version__ = (1, 0, 0)
 
 import logging
-import aiohttp, asyncio
+import asyncio
 from .. import loader, utils
 
 logger = logging.getLogger(__name__)
@@ -28,13 +28,13 @@ class GoogleItMod(loader.Module):
     strings = {
         "name": "Google it",
         "cfg_lingva_url": "Look for the answer to your question in Google",
-        "answer": "I advise you to start looking in the search engine: ",
+        "answer": "😒 I advise you to start looking in the search engine: ",
         "error": "Error!\n .googleit | text",
     }
 
     strings_ru = {
         "cfg_lingva_url": "Поищи ответ на свой вопрос в гугле",
-        "answer": "Советую поискать для начала в поисковике: ",
+        "answer": "😒 Советую поискать для начала в поисковике: ",
         "error": "Ошибка!\n \n .googleit | text",
     }
 
