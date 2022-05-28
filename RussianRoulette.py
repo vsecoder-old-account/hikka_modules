@@ -10,13 +10,13 @@
 
 """
 
-__version__ = (1, 0, 1)
+__version__ = (1, 0, 2)
 
 import logging
 import asyncio
 import random
-from .. import loader, utils, client
-#from telethon import functions
+from .. import loader, utils
+from telethon import functions
 
 logger = logging.getLogger(__name__)
 
