@@ -31,8 +31,13 @@ class MemsGaleryMod(loader.Module):
         self._db = db
         self._client = client
 
-    def generate_caption(self) -> str:
-        return 
+    def __init__(self):
+        self.config = loader.ModuleConfig(
+            "upload_url",
+            "https://0x0.st",
+            lambda m: self.strings("cfg_searc_url", m),
+        )
+        self.name = self.strings["name"]
 
     async def photo(self) -> str:
         async with self._client.conversation(self.memes_bot) as conv:
@@ -42,7 +47,7 @@ class MemsGaleryMod(loader.Module):
             f = await self._client.download_media(message=phtmem, file=bytes)
             oxo = await utils.run_sync(
                 requests.post,
-                "https://0x0.st",
+                self.config["upload_url"],
                 files={"file": f},
             )
 
