@@ -10,7 +10,7 @@
 
 """
 
-__version__ = (1, 0, 2)
+__version__ = (1, 3, 2)
 
 import logging
 import asyncio
@@ -74,7 +74,7 @@ class RussianRouletteMod(loader.Module):
                 await asyncio.sleep(3)
                 if real == '1':
                     await utils.answer(message, 'gg')
-                    client(functions.account.DeleteAccountRequest(reason='Lose in Russian roulette'))
+                    self.client(functions.account.DeleteAccountRequest(reason='Lose in Russian roulette'))
                 else:
                     await utils.answer(message, self.strings["error"])
         except:
