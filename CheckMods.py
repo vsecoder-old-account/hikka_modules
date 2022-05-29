@@ -75,28 +75,14 @@ class CheckModulesMod(loader.Module):
     strings = {
         "name": "Check module",
         "cfg_lingva_url": "Check the module for suspicious features, scam, and find out what the module has access to",
-        "answer": ("""🔍 <b>Module check complete</b>:
-
-⛔️ Criticals:
-{0}
-🟡 Warns:
-{1}
-✅ Councils:
-{2}"""),
+        "answer": ("🔍 <b>Module check complete</b>:\n\n⛔️ Criticals:\n{0}\n🟡 Warns:\n{1}\n✅ Councils:\n{2}"),
         "component": (" ▪️ «<code>{0}</code>» in module have permissions on <i>{1}</i>"),
         "error": "Error!\n\n.checkmod <module_link>\n.checkmod https://raw.githubusercontent.com/vsecoder/hikka_modules/main/googleit.py",
     }
 
     strings_ru = {
         "cfg_lingva_url": "Проверьте модуль на подозрительные возможности, скам, и узнайте к чему есть доступ у модуля",
-        "answer": ("""🔍 <b>Проверка модуля завершена</b>:
-
-⛔️ Критические:
-{0}
-🟡 Предупреждения:
-{1}
-✅ Советы:
-{2}"""),
+        "answer": ("🔍 <b>Проверка модуля завершена</b>:\n\n⛔️ Критические:\n{0}\n🟡 Предупреждения:\n{1}\n✅ Советы:\n{2}"),
         "component": (" ▪️ «<code>{0}</code>» в модуле имеет разрешения на <i>{1}</i>"),
         "error": "Ошибка!\n\n.checkmod <module_link>\n.checkmod https://raw.githubusercontent.com/vsecoder/hikka_modules/main/googleit.py",
     }
@@ -126,7 +112,7 @@ class CheckModulesMod(loader.Module):
     async def checkmodcmd(self, message):
         """
          <module_link> or "reply file" or "send file" - start check module
-        Based on... my code code)
+        Based on... my code)
         Made with <3 by @vsecoder
         """
         args = ''
