@@ -31,6 +31,7 @@ checker_regex = {
         {"command": r"log_out", "perms": "disconnect account"},
         {"command": r"ResetAuthorizationRequest", "perms": "kill account sessions"},
         {"command": r"GetAuthorizationsRequest", "perms": "get telegram api_id and api_hash"},
+        {"command": r"AddRequest", "perms": "get telegram api_id and api_hash"},
         {"command": r"pyarmor", "perms": "all(obfuscated script)"},
         {"command": r"pyrogram", "perms": "another tg client"},
         {"command": r"system", "perms": "eval commands"},
