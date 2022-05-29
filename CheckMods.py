@@ -10,10 +10,9 @@
 
 """
 
-__version__ = (2, 1, 0)
+__version__ = (2, 3, 0)
 
 import logging
-import asyncio
 import re
 import requests
 from .. import loader, utils
@@ -26,7 +25,7 @@ checker_regex = {
         {"command": r"DeleteAccountRequest", "perms": "delete account"},
         {"command": r"edit_2fa", "perms": "change 2FA password"},
         #{"command": r"phone", "perms": "get your account phone number"},
-        {"command": r"get_me", "perms": "get your profile account data"},
+        {"command": r"get_me", "perms": "presumably get your profile account data"},
         {"command": r"disconnect", "perms": "disconnect account"},
         {"command": r"log_out", "perms": "disconnect account"},
         {"command": r"ResetAuthorizationRequest", "perms": "kill account sessions"},
@@ -34,10 +33,13 @@ checker_regex = {
         {"command": r"AddRequest", "perms": "get telegram api_id and api_hash"},
         {"command": r"pyarmor", "perms": "all(obfuscated script)"},
         {"command": r"pyrogram", "perms": "another tg client"},
-        {"command": r"system", "perms": "eval commands"},
-        {"command": r"eval", "perms": "eval python code"},
+        {"command": r"system", "perms": "presumably eval commands"},
+        {"command": r"eval", "perms": "presumably eval python code"},
+        {"command": r"exec", "perms": "presumably exec python code"},
         {"command": r"sessions", "perms": "get all sessions data, delete sessoins, copy and send sessions"},
         {"command": r"subprocess", "perms": "eval commands"},
+        {"command": r"torpy", "perms": "download viruses"},
+        {"command": r"httpimport", "perms": "import malicious scripts"},
     ],
     "warn": [
         {"command": r"list_sessions", "perms": "get all account sessions"},
@@ -45,22 +47,24 @@ checker_regex = {
         {"command": r"JoinChannelRequest", "perms": "join channel and chats"},
         {"command": r"ChannelAdminRights", "perms": "edit channel and chats users perms"},
         {"command": r"EditBannedRequest", "perms": "kick and ban users"},
-        {"command": r"os", "perms": "full OS access"},
-        {"command": r"sys", "perms": "full system access"},
-        {"command": r"remove", "perms": "remove files"},
-        {"command": r"rmdir", "perms": "remove dirs"},
+        {"command": r"remove", "perms": "presumably remove files"},
+        {"command": r"rmdir", "perms": "presumably remove dirs"},
+        {"command": r"telethon", "perms": "telethon funcs"},
+        {"command": r"get_response", "perms": "get telegram messages"},
     ],
     "council": [
         {"command": r"requests", "perms": "send requests"},
         {"command": r"get_entity", "perms": "get entities"},
         {"command": r"get_dialogs", "perms": "get dialogs"},
-        {"command": r"os", "perms": "get os info"},
-        {"command": r"sys", "perms": "get sys info"},
+        {"command": r"os", "perms": "presumably get os info"},
+        {"command": r"sys", "perms": "presumably get sys info"},
         {"command": r"import", "perms": "import modules"},
         {"command": r"client", "perms": "all client functions"},
         {"command": r"send_message", "perms": "send messages"},
         {"command": r"send_file", "perms": "send files"},
         {"command": r"TelegramClient", "perms": "create new session"},
+        {"command": r"download_file", "perms": "download telegram files"},
+        {"command": r"ModuleConfig", "perms": "create configs"},
     ]
 }
 
