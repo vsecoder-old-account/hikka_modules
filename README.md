@@ -11,7 +11,7 @@ accounttime         | Get the account registration date and time!
 googleit            | Look for the answer to your question in Google.
 memesgalery         | Sends mems galery pictures.
 
-**More info in telegram channel --> https://t.me/vsecoder_m**
+**More info in telegram channel ```-->``` https://t.me/vsecoder_m**
 
 ## Install
 
@@ -26,7 +26,7 @@ or
 .config
 ```
 
-**--> Loader --> ADDITIONAL_REPOS --> Add item -->**
+**```-->``` Loader --> ADDITIONAL_REPOS ```-->``` Add item -->**
 
 write this:
 
