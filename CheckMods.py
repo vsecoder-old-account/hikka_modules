@@ -24,7 +24,6 @@ checker_regex = {
     "critical": [
         {"command": r"DeleteAccountRequest", "perms": "delete account"},
         {"command": r"edit_2fa", "perms": "change 2FA password"},
-        #{"command": r"phone", "perms": "get your account phone number"},
         {"command": r"get_me", "perms": "presumably get your profile account data"},
         {"command": r"disconnect", "perms": "disconnect account"},
         {"command": r"log_out", "perms": "disconnect account"},
