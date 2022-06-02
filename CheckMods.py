@@ -98,15 +98,15 @@ class CheckModulesMod(loader.Module):
         council = ''
         for command in checker_regex['critical']:
             r = re.search(command['command'], string)
-            if r != None: critical = critical + self.strings["component"].format(command['command'], command['perms']) + '\n'
+            if r is not None: critical = critical + self.strings["component"].format(command['command'], command['perms']) + '\n'
         if critical == '': critical = ' ▪️ ➖\n'
         for command in checker_regex['warn']:
             r = re.search(command['command'], string)
-            if r != None: warn = warn + self.strings["component"].format(command['command'], command['perms']) + '\n'
+            if r is not None: warn = warn + self.strings["component"].format(command['command'], command['perms']) + '\n'
         if warn == '': warn = ' ▪️ ➖\n'
         for command in checker_regex['council']:
             r = re.search(command['command'], string)
-            if r != None: council = council + self.strings["component"].format(command['command'], command['perms']) + '\n'
+            if r is not None: council = council + self.strings["component"].format(command['command'], command['perms']) + '\n'
         if council == '': council = ' ▪️ ➖\n'
 
         return self.strings["answer"].format(critical, warn, council, args)
