@@ -14,7 +14,8 @@ __version__ = (1, 5, 0)
 
 import logging
 import asyncio
-import json, pathlib
+import json
+import pathlib
 from typing import Callable
 import time
 from dateutil.relativedelta import relativedelta

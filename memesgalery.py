@@ -11,7 +11,10 @@
 """
 
 from email import message
-import os, random, requests, imghdr
+import os
+import random
+import requests
+import imghdr
 from telethon.tl.types import Message
 from io import BytesIO
 
