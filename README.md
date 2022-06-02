@@ -26,7 +26,7 @@ or
 .config
 ```
 
-**```-->``` Loader --> ADDITIONAL_REPOS ```-->``` Add item -->**
+**```-->``` Loader ```-->``` ADDITIONAL_REPOS ```-->``` Add item ```-->```**
 
 write this:
 
