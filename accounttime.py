@@ -46,7 +46,6 @@ data = {
 class Function:
     def __init__(self, order: int = 3):
         self.order = 3
-        #self.data_path = pathlib.Path.cwd().joinpath("dates.json")
 
         self.x, self.y = self._unpack_data()
         self._func = self._fit_data()
@@ -67,13 +66,9 @@ class Function:
     def add_datapoint(self, pair: tuple):
         pair[0] = str(pair[0])
 
-        #with open(self.data_path) as string_data:
-        #    data = json.load(string_data)
 
         data.update([pair])
 
-        #with open(self.data_path, "w") as string_data:
-        #    json.dump(data, string_data)
 
         # update the model with new data
         #self.x, self.y = self._unpack_data()
