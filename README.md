@@ -10,6 +10,7 @@ ScreenWeb           | Module for screenshot web site.
 accounttime         | Get the account registration date and time!
 googleit            | Look for the answer to your question in Google.
 memesgalery         | Sends mems galery pictures.
+biopage             | Module for create bio page
 
 **More info in telegram channel ```-->``` https://t.me/vsecoder_m**
 
