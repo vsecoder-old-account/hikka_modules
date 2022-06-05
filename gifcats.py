@@ -20,6 +20,7 @@ from telethon.tl.types import Message
 from telethon.tl.types import PeerUser, PeerChat, PeerChannel
 from telethon.tl.functions.messages import GetHistoryRequest
 from telethon.tl.types import MessageMediaPhoto, MessageMediaDocument
+from telethon.tl.functions.channels import JoinChannelRequest
 
 @loader.tds
 class GifCatsMod(loader.Module):
@@ -32,6 +33,7 @@ class GifCatsMod(loader.Module):
         self._db = db
         self._client = client
         self._url = ''
+        await client(JoinChannelRequest('simpampulki'))
 
     def __init__(self):
         self.config = loader.ModuleConfig(
