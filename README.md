@@ -12,6 +12,7 @@ googleit            | Look for the answer to your question in Google.
 memesgalery         | Sends mems galery pictures.
 biopage             | Module for create bio page
 gifcats             | Sends cats gifs and gallery
+Maze Module         | Module for play maze
 
 **More info in telegram channel ```-->``` https://t.me/vsecoder_m**
 
