@@ -2,19 +2,21 @@
 
 ## Modules list
 
-| Name | About |
-|---|---|
-CheckMods           | Check the module for suspicious features, scam, and find out what the module has access to.
-RussianRoulette     | 1/8 chance of destroying the account, are you taking a chance or are you afraid?)
-ScreenWeb           | Module for screenshot web site.
-accounttime         | Get the account registration date and time!
-googleit            | Look for the answer to your question in Google.
-memesgalery         | Sends mems galery pictures.
-biopage             | Module for create bio page
-gifcats             | Sends cats gifs and gallery
-Maze Module         | Module for play maze
-Calc                | Module for inline calc
-OctoCode            | Module for octopussed code
+```
+Name             About                                                                                        Link
+---------------  -------------------------------------------------------------------------------------------  ---------------------------
+CheckMods        Check the module for suspicious features, scam, and find out what the module has access to.  https://t.me/vsecoder_m/28
+RussianRoulette  1/8 chance of destroying the account, are you taking a chance or are you afraid?)            https://t.me/vsecoder_m/15
+ScreenWeb        Module for screenshot web site.                                                              https://t.me/vsecoder_m/43
+AccountTime      Get the account registration date and time!                                                  https://t.me/vsecoder_m/10
+GoogleIt         Look for the answer to your question in Google.                                              https://t.me/vsecoder_m/6
+MemesGalery      Sends mems galery pictures.                                                                  https://t.me/vsecoder_m/18
+BioPage          Module for create bio page                                                                   https://t.me/vsecoder_m/71
+GifCats          Sends cats gifs and gallery                                                                  https://t.me/vsecoder_m/77
+Maze Module      Module for play maze                                                                         https://t.me/vsecoder_m/99
+Calc             Module for inline calc                                                                       https://t.me/vsecoder_m/107
+OctoCode         Module for octopussed code                                                                   https://t.me/vsecoder_m/113
+```
 
 **More info in telegram channel ```-->``` https://t.me/vsecoder_m**
 
