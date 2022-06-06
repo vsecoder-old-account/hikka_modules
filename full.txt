@@ -7,3 +7,4 @@ memesgalery
 biopage
 gifcats
 mazemod
+calc
