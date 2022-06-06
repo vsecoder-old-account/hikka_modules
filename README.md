@@ -14,6 +14,7 @@ biopage             | Module for create bio page
 gifcats             | Sends cats gifs and gallery
 Maze Module         | Module for play maze
 Calc                | Module for inline calc
+OctoCode            | Module for octopussed code
 
 **More info in telegram channel ```-->``` https://t.me/vsecoder_m**
 
