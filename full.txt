@@ -9,3 +9,4 @@ gifcats
 mazemod
 calc
 octocode
+wikimod
