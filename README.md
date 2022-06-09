@@ -16,6 +16,7 @@ GifCats          Sends cats gifs and gallery                                    
 Maze Module      Module for play maze                                                                         https://t.me/vsecoder_m/99
 Calc             Module for inline calc                                                                       https://t.me/vsecoder_m/107
 OctoCode         Module for octopussed code                                                                   https://t.me/vsecoder_m/113
+WikiMod          Module for wikipedia search                                                                  ...
 ```
 
 **More info in telegram channel ```-->``` https://t.me/vsecoder_m**
