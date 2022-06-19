@@ -9,8 +9,9 @@
     This program is free software; you can redistribute it and/or modify 
 
 """
+# meta developer: @vsecoder_m
 
-__version__ = (1, 0, 0)
+__version__ = (1, 0, 1)
 
 import logging, time
 from telethon.utils import get_display_name
@@ -58,7 +59,7 @@ class FeedbackBotMod(loader.Module):
         self.__doc__ = "Module from add feedback bot 👨‍💻\n\n" \
         "📝 Dev: @vsecoder\n" \
         "📥 Source: github.com/vsecoder/hikka_modules" \
-        "\n📦 Version: 1.0.0\n\n" \
+        "\n📦 Version: 1.0.1\n\n" \
         f"🔗 Feedback link: t.me/{self.inline.bot_username}?start=feedback\n\n" \
         "❌ Toggle in .security \"✅ Everyone (inline)\" to use"
 
