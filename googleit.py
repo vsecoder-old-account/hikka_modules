@@ -46,19 +46,31 @@ class GoogleItMod(loader.Module):
         )
         self.name = self.strings["name"]
 
+    async def client_ready(self, client, db):
+        self._client = client
+
+        await self.save_stat("download")
+
+    async def save_stat(self, state):
+        bot = "@modules_stat_bot"
+        m = await self._client.send_message(bot, f"/{state} feedbackbot")
+        await self._client.delete_messages(bot, m)
+
+    async def on_unload(self):
+        await self.save_stat("unload")
+
     @loader.unrestricted
     @loader.ratelimit
     async def googleitcmd(self, message):
         """
-         | text
-        Based on... my code)
+         {text} - text to search
+        Based on t.me/vsecoder code
         """
-        args = utils.get_args_raw(message)
-        query = args.split("|")[1]
+        args = message.text.replace(f"{self.get_prefix()}googleit ", "")
         if args:
-            if query:
+            if args:
                 url = self.config["search_url"].format(
-                    query=query
+                    query=args
                 ).replace(" ", "+")
             else:
                 await utils.answer(message, self.strings["error"])
