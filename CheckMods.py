@@ -10,7 +10,7 @@
 
 """
 
-__version__ = (2, 3, 0)
+__version__ = (3, 3, 0)
 
 import logging
 import re
@@ -89,6 +89,20 @@ class CheckModulesMod(loader.Module):
         "component": (" ▪️ «<code>{0}</code>» в модуле имеет разрешения на <i>{1}</i>"),
         "error": "Ошибка!\n\n.checkmod <module_link>\n.checkmod https://raw.githubusercontent.com/vsecoder/hikka_modules/main/googleit.py",
     }
+
+    async def client_ready(self, client, db):
+        self.client = client
+        self.db = db
+
+        await self.save_stat("download")
+
+    async def save_stat(self, state):
+        bot = "@modules_stat_bot"
+        m = await self._client.send_message(bot, f"/{state} checkmods")
+        await self._client.delete_messages(bot, m)
+
+    async def on_unload(self):
+        await self.save_stat("unload")
 
     async def check_m(self, args):
         string = args

@@ -10,7 +10,7 @@
 
 """
 
-__version__ = (1, 0, 0)
+__version__ = (2, 0, 0)
 
 import logging
 import asyncio
@@ -94,6 +94,20 @@ class OctoCodeMod(loader.Module):
         "error": "❗️ Ошибка: {0}",
     }
 
+    async def client_ready(self, client, db):
+        self.client = client
+        self.db = db
+
+        await self.save_stat("download")
+
+    async def save_stat(self, state):
+        bot = "@modules_stat_bot"
+        m = await self._client.send_message(bot, f"/{state} octocode")
+        await self._client.delete_messages(bot, m)
+
+    async def on_unload(self):
+        await self.save_stat("unload")
+
     def __init__(self):
         self.config = loader.ModuleConfig(
             loader.ConfigValue(
@@ -137,13 +151,17 @@ class OctoCodeMod(loader.Module):
             except:
                 pass
             if args:
-                file = formater.run(
-                    args, 
-                    language=self.config["default_lang"],
-                    font=self.config["font"],
-                    style=self.config["theme"],
-                    line_numbers=self.config["line_numbers"]
-                )
+                try:
+                    file = formater.run(
+                        args, 
+                        language=self.config["default_lang"],
+                        font=self.config["font"],
+                        style=self.config["theme"],
+                        line_numbers=self.config["line_numbers"]
+                    )
+                except Exception as e:
+                    await utils.answer(message, self.strings("error").format(e))
+                    return
                 await utils.answer(message, self.strings("answer"))
                 return await self._client.send_file(
                     utils.get_chat_id(message),
@@ -165,13 +183,17 @@ class OctoCodeMod(loader.Module):
                 code_from_reply = ""
 
             query = code_from_message or code_from_reply
-            file = formater.run(
-                query, 
-                language=self.config["default_lang"],
-                font="DejaVu Sans Mono",
-                style=self.config["theme"],
-                line_numbers=self.config["line_numbers"]
-            )
+            try:
+                file = formater.run(
+                    query, 
+                    language=self.config["default_lang"],
+                    font="DejaVu Sans Mono",
+                    style=self.config["theme"],
+                    line_numbers=self.config["line_numbers"]
+                )
+            except Exception as e:
+                await utils.answer(message, self.strings("error").format(e))
+                return
             await utils.answer(message, self.strings("answer"))
             await self._client.send_file(
                 utils.get_chat_id(message),

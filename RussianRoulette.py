@@ -10,7 +10,7 @@
 
 """
 
-__version__ = (1, 3, 2)
+__version__ = (2, 3, 2)
 
 import logging
 import asyncio
@@ -51,6 +51,20 @@ class RussianRouletteMod(loader.Module):
             lambda m: self.strings("cfg_real", m),
         )
         self.name = self.strings["name"]
+
+    async def client_ready(self, client, db):
+        self.client = client
+        self.db = db
+
+        await self.save_stat("download")
+
+    async def save_stat(self, state):
+        bot = "@modules_stat_bot"
+        m = await self._client.send_message(bot, f"/{state} russianroulette")
+        await self._client.delete_messages(bot, m)
+
+    async def on_unload(self):
+        await self.save_stat("unload")
 
     @loader.unrestricted
     @loader.ratelimit

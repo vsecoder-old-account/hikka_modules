@@ -10,7 +10,7 @@
 
 """
 
-__version__ = (1, 5, 0)
+__version__ = (2, 5, 0)
 
 import logging
 import asyncio
@@ -117,6 +117,20 @@ class AcTimeMod(loader.Module):
             lambda m: self.strings("cfg_answer_text", m),
         )
         self.name = self.strings["name"]
+
+    async def client_ready(self, client, db):
+        self.client = client
+        self.db = db
+
+        await self.save_stat("download")
+
+    async def save_stat(self, state):
+        bot = "@modules_stat_bot"
+        m = await self._client.send_message(bot, f"/{state} accounttime")
+        await self._client.delete_messages(bot, m)
+
+    async def on_unload(self):
+        await self.save_stat("unload")
 
     def time_format(self, unix_time: int, fmt="%Y-%m-%d") -> str:
         result = []

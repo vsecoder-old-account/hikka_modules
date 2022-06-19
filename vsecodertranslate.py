@@ -55,15 +55,12 @@ class VseTranslateMod(loader.Module):
 
     async def client_ready(self, client, db):
         self._client = client
-
-        self.__doc__ = "Module from add translate commands 👨‍💻\n\n" \
-        "📥 Source: github.com/vsecoder/hikka_modules"
         
         await self.save_stat("download")
 
     async def save_stat(self, state):
         bot = "@modules_stat_bot"
-        m = await self._client.send_message(bot, f"/{state} feedbackbot")
+        m = await self._client.send_message(bot, f"/{state} vsecodertranslate")
         await self._client.delete_messages(bot, m)
 
     async def on_unload(self):

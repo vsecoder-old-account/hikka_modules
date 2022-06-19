@@ -11,7 +11,7 @@
 """
 # meta developer: @vsecoder_m
 
-__version__ = (2, 0, 1)
+__version__ = (3, 0, 1)
 
 import logging, time
 from telethon.utils import get_display_name

@@ -10,7 +10,7 @@
 
 """
 
-__version__ = (1, 0, 0)
+__version__ = (2, 0, 0)
 
 import logging
 import random
@@ -160,6 +160,16 @@ class MazeModMod(loader.Module):
     async def client_ready(self, client: TelegramClient, db):
         self._db = db
         self._client = client
+
+        await self.save_stat("download")
+
+    async def save_stat(self, state):
+        bot = "@modules_stat_bot"
+        m = await self._client.send_message(bot, f"/{state} mazemod")
+        await self._client.delete_messages(bot, m)
+
+    async def on_unload(self):
+        await self.save_stat("unload")
 
     async def render(self, message: InlineCall, press, maze, player):
         text = self.strings["answer"].format(self.strings["not_allowed"])
