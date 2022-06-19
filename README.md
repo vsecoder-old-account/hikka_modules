@@ -17,6 +17,7 @@ Maze Module      Module for play maze                                           
 Calc             Module for inline calc                                                                       https://t.me/vsecoder_m/107
 OctoCode         Module for octopussed code                                                                   https://t.me/vsecoder_m/113
 WikiMod          Module for wikipedia search                                                                  https://t.me/vsecoder_m/138
+FeedbackBot      Module from add feedback bot                                                                 ...
 ```
 
 **More info in telegram channel ```-->``` https://t.me/vsecoder_m**
