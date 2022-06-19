@@ -11,7 +11,7 @@
 """
 # meta developer: @vsecoder_m
 
-__version__ = (1, 2, 1)
+__version__ = (2, 2, 1)
 
 from fnmatch import translate
 import logging
@@ -57,8 +57,17 @@ class VseTranslateMod(loader.Module):
         self._client = client
 
         self.__doc__ = "Module from add translate commands 👨‍💻\n\n" \
-        "📥 Source: github.com/vsecoder/hikka_modules" \
-        "\n📦 Version: 1.2.1"
+        "📥 Source: github.com/vsecoder/hikka_modules"
+        
+        await self.save_stat("download")
+
+    async def save_stat(self, state):
+        bot = "@modules_stat_bot"
+        m = await self._client.send_message(bot, f"/{state} feedbackbot")
+        await self._client.delete_messages(bot, m)
+
+    async def on_unload(self):
+        await self.save_stat("unload")
 
     async def translate(self, text, lang_from="auto", lang_to="ru", translator="google"):
         translators = {
@@ -92,17 +101,17 @@ class VseTranslateMod(loader.Module):
         translators = [
             "google", "yandex", "bing", "iciba"
         ]
-        text = message.text.replace(".vsetranslate", "")
+        text = message.text.replace(f"{self.get_prefix()}vsetranslate", "")
         t = ""
         if not args:
             return await utils.answer(message, self.strings("invalid_args"))
         if args[0] not in langs:                                # .vsetranslate text
             t = await self.translate(text, translator=self.config["default_translator"], lang_to=self.config["default_lang"])
         elif args[1] not in langs and args[0] in langs:         # .vsetranslate from_language text
-            text = message.text.replace(f".vsetranslate {args[0]}", "")
+            text = message.text.replace(f"{self.get_prefix()}vsetranslate {args[0]}", "")
             t = await self.translate(text, translator=self.config["default_translator"], lang_to=self.config["default_lang"], lang_from=args[0])
         elif args[2] not in translators and args[1] in langs:   # .vsetranslate from_language to_language text
-            text = message.text.replace(f".vsetranslate {args[0]} {args[1]}", "")
+            text = message.text.replace(f"{self.get_prefix()}vsetranslate {args[0]} {args[1]}", "")
             t = await self.translate(
                 text, 
                 translator=self.config["default_translator"],
@@ -110,7 +119,7 @@ class VseTranslateMod(loader.Module):
                 lang_from=args[0]
             )
         else:                                                   # .vsetranslate from_language to_language translator text
-            text = message.text.replace(f".vsetranslate {args[0]} {args[1]} {args[2]}", "")
+            text = message.text.replace(f"{self.get_prefix()}vsetranslate {args[0]} {args[1]} {args[2]}", "")
             t = await self.translate(
                 text, 
                 translator=args[2],
