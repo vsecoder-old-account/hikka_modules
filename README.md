@@ -3,8 +3,8 @@
 ## Modules list
 
 ```
-Name             About                                                                                        Link
----------------  -------------------------------------------------------------------------------------------  ---------------------------
+Name               About                                                                                        Link
+---------------    -------------------------------------------------------------------------------------------  ---------------------------
 CheckMods          Check the module for suspicious features, scam, and find out what the module has access to.  https://t.me/vsecoder_m/28
 RussianRoulette    1/8 chance of destroying the account, are you taking a chance or are you afraid?)            https://t.me/vsecoder_m/15
 ScreenWeb          Module for screenshot web site.                                                              https://t.me/vsecoder_m/43
@@ -19,6 +19,7 @@ OctoCode           Module for octopussed code                                   
 WikiMod            Module for wikipedia search                                                                  https://t.me/vsecoder_m/138
 FeedbackBot        Module from add feedback bot                                                                 https://t.me/vsecoder_m/181
 VsecoderTranslate  Module from add smart translate commands                                                     https://t.me/vsecoder_m/184
+Formatter          Module for prettyfy formatting messages                                                      ... 
 ```
 
 **More info in telegram channel ```-->``` https://t.me/vsecoder_m**

@@ -12,3 +12,4 @@ octocode
 wikimod
 feedbackbot
 vsecodertranslate
+formatter
