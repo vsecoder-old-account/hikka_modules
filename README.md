@@ -19,7 +19,7 @@ OctoCode           Module for octopussed code                                   
 WikiMod            Module for wikipedia search                                                                  https://t.me/vsecoder_m/138
 FeedbackBot        Module from add feedback bot                                                                 https://t.me/vsecoder_m/181
 VsecoderTranslate  Module from add smart translate commands                                                     https://t.me/vsecoder_m/184
-Formatter          Module for prettyfy formatting messages                                                      ... 
+Formatter          Module for prettyfy formatting messages                                                      https://t.me/vsecoder_m/190
 ```
 
 **More info in telegram channel ```-->``` https://t.me/vsecoder_m**
