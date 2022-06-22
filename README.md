@@ -21,6 +21,7 @@ FeedbackBot        Module from add feedback bot                                 
 VsecoderTranslate  Module from add smart translate commands                                                     https://t.me/vsecoder_m/184
 Formatter          Module for prettyfy formatting messages                                                      https://t.me/vsecoder_m/190
 Ascii              Module for convert image to ascii                                                            ...
+ProfileMod         Module for get beautiful picture profile statistic                                           ...
 ```
 
 **More info in telegram channel ```-->``` https://t.me/vsecoder_m**
