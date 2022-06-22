@@ -13,3 +13,4 @@ wikimod
 feedbackbot
 vsecodertranslate
 formatter
+ascii

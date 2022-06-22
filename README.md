@@ -20,6 +20,7 @@ WikiMod            Module for wikipedia search                                  
 FeedbackBot        Module from add feedback bot                                                                 https://t.me/vsecoder_m/181
 VsecoderTranslate  Module from add smart translate commands                                                     https://t.me/vsecoder_m/184
 Formatter          Module for prettyfy formatting messages                                                      https://t.me/vsecoder_m/190
+Ascii              Module for convert image to ascii                                                            ...
 ```
 
 **More info in telegram channel ```-->``` https://t.me/vsecoder_m**

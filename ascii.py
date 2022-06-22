@@ -1,0 +1,131 @@
+"""
+                                _             
+  __   _____  ___  ___ ___   __| | ___ _ __   
+  \ \ / / __|/ _ \/ __/ _ \ / _` |/ _ \ '__|  
+   \ V /\__ \  __/ (_| (_) | (_| |  __/ |     
+    \_/ |___/\___|\___\___/ \__,_|\___|_|     
+
+    Copyleft 2022 t.me/vsecoder                                                            
+    This program is free software; you can redistribute it and/or modify 
+
+"""
+
+__version__ = (0, 0, 1)
+
+import logging
+from .. import loader, utils
+import imgkit
+try:
+    from PIL import Image
+except:
+    raise Exception("Your server haven't Pillow(read: https://www.geeksforgeeks.org/how-to-install-pil-on-linux/) or doesn't support this module(Pillow)")
+
+from image2ascii.core import Image2ASCII
+
+logger = logging.getLogger(__name__)
+
+
+@loader.unrestricted
+@loader.ratelimit
+@loader.tds
+class AsciiMod(loader.Module):
+    """Module for convert image to ascii"""
+
+    strings = {
+        "name": "AsciiMod",
+        "loading_image": "⏳ Downloading image...",
+        "converting_image": "⏳ Converting image...",
+        "save_image": "⏳ Saving image...",
+        "os_error": ("❗️ Install 'wkhtmltopdf'\n\n.terminal sudo apt install wkhtmltopdf"),
+        "type_error": "❗️ Unknown image format!",
+        "another_error": "❗️ Unknown error, please check logs!\n\n{}",
+        "complete": "🖍 Look:"
+    }
+
+    strings_ru = {
+        "loading_image": "⏳ Скачивается изображение...",
+        "converting_image": "⏳ Конвертируется изображение...",
+        "save_image": "⏳ Сохраняется изображение...",
+        "os_error": ("❗️ Установите 'wkhtmltopdf'\n\n.terminal sudo apt install wkhtmltopdf"),
+        "type_error": "❗️ Неизвестный формат изображения!",
+        "another_error": "❗️ Неизвестная ошибка, пожайлуйста проверьте логи!\n\n{}",
+        "complete": "🖍 Смотри:"
+    }
+
+    def __init__(self):
+        self.config = loader.ModuleConfig(
+            loader.ConfigValue(
+                "background",
+                "black",
+                lambda m: 'Background',
+            ),
+            loader.ConfigValue(
+                "color",
+                "white",
+                lambda m: 'Color',
+            ),
+        )
+        self.name = self.strings["name"]
+
+    async def client_ready(self, client, db):
+        self.client = client
+        self.db = db
+        await self.save_stat("download")
+
+    async def save_stat(self, state):
+        bot = "@modules_stat_bot"
+        m = await self._client.send_message(bot, f"/{state} ascii")
+        await self._client.delete_messages(bot, m)
+
+    async def on_unload(self):
+        await self.save_stat("unload")
+
+    @loader.unrestricted
+    @loader.ratelimit
+    async def asciicmd(self, message):
+        """
+         <reply_to_image> - convert image to ascii
+        """
+        try:
+            reply = await message.get_reply_message()
+
+            await utils.answer(message, self.strings("loading_image"))
+            f = await self._client.download_media(message=reply, file='test.png')
+            await utils.answer(message, self.strings("converting_image"))
+            r = Image2ASCII('test.png').render()
+
+            ascii = ''
+            background = self.config["background"]
+            color = self.config["color"]
+
+            im = Image.open('test.png')
+            width, height = im.size
+
+            options = {
+                "crop-w": width,
+                "crop-h": height,
+                'encoding': "UTF-8"
+            }
+
+            for line in str(r).split('\n'):
+                ascii += str(line).replace(' ', '&nbsp;') + '<br>'
+
+            await utils.answer(message, self.strings("save_image"))
+
+            with open('test.html', 'w') as f:
+                f.write(f'<html style="background: {background}; color: {color}"><code>{ascii}</code></html>')
+
+            try:
+                imgkit.from_file('test.html', 'out.jpg', options=options)
+
+                await self._client.send_file(
+                    utils.get_chat_id(message),
+                    open('out.jpg', 'rb'),
+                )
+                await utils.answer(message, self.strings("complete"))
+            except OSError:
+                await utils.answer(message, self.strings("os_error"))
+        except TypeError:
+            await utils.answer(message, self.strings("type_error"))
+        except Exception as e:
+            await utils.answer(message, self.strings("another_error").format(e))
