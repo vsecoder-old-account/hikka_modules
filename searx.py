@@ -11,7 +11,7 @@
     Thk @fleef
 """
 
-__version__ = (1, 0, 0)
+__version__ = (1, 0, 1)
 
 import logging
 import json
@@ -55,7 +55,7 @@ for engine in engines:
 @loader.unrestricted
 @loader.ratelimit
 @loader.tds
-class GoogleItMod(loader.Module):
+class SearXMod(loader.Module):
     """Module for multi search"""
 
     strings = {
