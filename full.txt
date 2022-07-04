@@ -15,3 +15,4 @@ vsecodertranslate
 formatter
 ascii
 profile
+searx
