@@ -9,11 +9,12 @@
     This program is free software; you can redistribute it and/or modify 
 
 """
+# meta developer: @vsecoder_m
+# meta pic: https://img.icons8.com/cotton/344/code.png
 
 __version__ = (2, 0, 0)
 
 import logging
-import asyncio
 from .. import loader, utils
 
 from pygments.lexers import guess_lexer, get_lexer_by_name
@@ -67,8 +68,7 @@ class FormatCode:
 
 logger = logging.getLogger(__name__)
 
-@loader.unrestricted
-@loader.ratelimit
+
 @loader.tds
 class OctoCodeMod(loader.Module):
     """Module for octopussed code"""
@@ -139,7 +139,6 @@ class OctoCodeMod(loader.Module):
         """
          <code> or "reply file" or "send file"
         Octopussed your code
-        Based on... my code)
         """
         await utils.answer(message, self.strings("loading"))
         try:

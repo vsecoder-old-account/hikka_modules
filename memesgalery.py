@@ -9,16 +9,15 @@
     This program is free software; you can redistribute it and/or modify 
 
 """
+# meta developer: @vsecoder_m
+# meta pic: https://img.icons8.com/ios/344/angry-face-meme.png
 
-from email import message
-import os
+
 import random
 import requests
-import imghdr
 from telethon.tl.types import Message
-from io import BytesIO
 
-from .. import loader, utils, main
+from .. import loader, utils
 from ..inline.types import InlineQuery
 
 from telethon import TelegramClient

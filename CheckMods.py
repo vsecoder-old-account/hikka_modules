@@ -9,6 +9,8 @@
     This program is free software; you can redistribute it and/or modify 
 
 """
+# meta developer: @vsecoder_m
+# meta pic: https://img.icons8.com/color/344/antivirus-scanner--v1.png
 
 __version__ = (3, 3, 0)
 
@@ -68,9 +70,6 @@ checker_regex = {
 }
 
 
-
-@loader.unrestricted
-@loader.ratelimit
 @loader.tds
 class CheckModulesMod(loader.Module):
     """Module for check modules"""
@@ -129,8 +128,6 @@ class CheckModulesMod(loader.Module):
     async def checkmodcmd(self, message):
         """
          <module_link> or "reply file" or "send file" - start check module
-        Based on... my code)
-        Made with <3 by @vsecoder
         """
         args = ''
         try:

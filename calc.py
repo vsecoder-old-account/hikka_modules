@@ -9,6 +9,8 @@
     This program is free software; you can redistribute it and/or modify 
 
 """
+# meta developer: @vsecoder_m
+# meta pic: https://img.icons8.com/color/344/calculate.png
 
 __version__ = (2, 0, 0)
 
@@ -21,8 +23,6 @@ from ..inline.types import InlineCall
 
 logger = logging.getLogger(__name__)
 
-@loader.unrestricted
-@loader.ratelimit
 @loader.tds
 class CalcMod(loader.Module):
     """Module for inline calc"""

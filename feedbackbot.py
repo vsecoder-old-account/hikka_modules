@@ -10,6 +10,7 @@
 
 """
 # meta developer: @vsecoder_m
+# meta pic: https://img.icons8.com/fluency/344/feedback.png
 
 __version__ = (3, 0, 1)
 
@@ -22,8 +23,6 @@ from ..inline.types import InlineCall
 logger = logging.getLogger(__name__)
 
 
-@loader.unrestricted
-@loader.ratelimit
 @loader.tds
 class FeedbackBotMod(loader.Module):
 

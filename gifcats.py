@@ -9,17 +9,18 @@
     This program is free software; you can redistribute it and/or modify 
 
 """
+# meta developer: @vsecoder_m
+# meta pic: https://img.icons8.com/bubbles/344/cat.png
 
-import os, random, requests, io
+import random, requests, io
 
-from .. import loader, utils, main
+from .. import loader, utils
 from ..inline.types import InlineQuery
 
 from telethon import TelegramClient
 from telethon.tl.types import Message
-from telethon.tl.types import PeerUser, PeerChat, PeerChannel
+from telethon.tl.types import PeerChannel
 from telethon.tl.functions.messages import GetHistoryRequest
-from telethon.tl.types import MessageMediaPhoto, MessageMediaDocument
 from telethon.tl.functions.channels import JoinChannelRequest
 
 @loader.tds

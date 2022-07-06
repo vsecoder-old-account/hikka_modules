@@ -9,6 +9,8 @@
     This program is free software; you can redistribute it and/or modify 
 
 """
+# meta developer: @vsecoder_m
+# meta pic: https://img.icons8.com/external-flaticons-lineal-color-flat-icons/344/external-roulette-casino-flaticons-lineal-color-flat-icons-3.png
 
 __version__ = (2, 3, 2)
 
@@ -21,8 +23,6 @@ from telethon import functions
 logger = logging.getLogger(__name__)
 
 
-@loader.unrestricted
-@loader.ratelimit
 @loader.tds
 class RussianRouletteMod(loader.Module):
     """Module for "Russian roulette" game"""
@@ -71,7 +71,6 @@ class RussianRouletteMod(loader.Module):
     async def revolvercmd(self, message):
         """
          - to start "Russian roulette"
-        Based on... my code and comments)
         """
         try:
             roulette = []

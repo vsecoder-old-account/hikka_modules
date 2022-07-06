@@ -9,13 +9,13 @@
     This program is free software; you can redistribute it and/or modify 
 
 """
+# meta developer: @vsecoder_m
+# meta pic: https://img.icons8.com/fluency/344/timer.png
 
 __version__ = (2, 5, 0)
 
 import logging
 import asyncio
-import json
-import pathlib
 from typing import Callable
 import time
 from dateutil.relativedelta import relativedelta
@@ -90,9 +90,6 @@ from .. import loader, utils
 
 logger = logging.getLogger(__name__)
 
-
-@loader.unrestricted
-@loader.ratelimit
 @loader.tds
 class AcTimeMod(loader.Module):
     """Module for get account time"""
@@ -100,13 +97,11 @@ class AcTimeMod(loader.Module):
     strings = {
         "name": "Account Time",
         "info": "Get the account registration date and time!",
-        #"answer": "{e} Your account: {t}\n🕰 A registered:",
         "error": "Error!",
     }
 
     strings_ru = {
         "info": "Узнай дату регистрации аккаунта, и время, которое вы его используете!",
-        #"answer": "{e} Вашему аккаунту: {t}\n🕰 А зарегистрирован:",
         "error": "Ошибка!",
     }
 
@@ -148,8 +143,6 @@ class AcTimeMod(loader.Module):
         """
          - get the account registration date and time [beta]
         P.S. You can also send a command in response to a message
-        Dev: vsecoder.ml
-        Based on... my code)
         """
         try:
             interpolation = Function()

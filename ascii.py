@@ -9,6 +9,8 @@
     This program is free software; you can redistribute it and/or modify 
 
 """
+# meta developer: @vsecoder_m
+# meta pic: https://img.icons8.com/color/344/asc.png
 
 __version__ = (0, 0, 1)
 
@@ -25,8 +27,6 @@ from image2ascii.core import Image2ASCII
 logger = logging.getLogger(__name__)
 
 
-@loader.unrestricted
-@loader.ratelimit
 @loader.tds
 class AsciiMod(loader.Module):
     """Module for convert image to ascii"""

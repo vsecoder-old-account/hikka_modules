@@ -9,6 +9,8 @@
     This program is free software; you can redistribute it and/or modify 
 
 """
+# meta developer: @vsecoder_m
+# meta pic: https://img.icons8.com/office/344/administrator-male--v1.png
 
 __version__ = (0, 0, 1)
 
@@ -23,8 +25,6 @@ import requests
 logger = logging.getLogger(__name__)
 
 
-@loader.unrestricted
-@loader.ratelimit
 @loader.tds
 class Profilemod(loader.Module):
     """Module for get beautiful picture profile statistic"""

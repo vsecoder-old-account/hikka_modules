@@ -9,6 +9,9 @@
     This program is free software; you can redistribute it and/or modify 
 
 """
+# meta developer: @vsecoder_m
+# meta pic: https://img.icons8.com/cute-clipart/344/wikipedia.png
+
 
 __version__ = (1, 0, 0)
 
@@ -18,8 +21,6 @@ from .. import loader, utils
 
 logger = logging.getLogger(__name__)
 
-@loader.unrestricted
-@loader.ratelimit
 @loader.tds
 class WikiMod(loader.Module):
     """Module for wikipedia search"""
@@ -51,7 +52,6 @@ class WikiMod(loader.Module):
     async def wikicmd(self, message):
         """
          <text> - search in wikipedia
-        Based on... my code)
         """
         args = utils.get_args_raw(message)
         result = {

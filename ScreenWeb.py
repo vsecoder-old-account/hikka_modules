@@ -9,6 +9,8 @@
     This program is free software; you can redistribute it and/or modify 
 
 """
+# meta developer: @vsecoder_m
+# meta pic: https://img.icons8.com/external-flaticons-lineal-color-flat-icons/344/external-screen-edutainment-flaticons-lineal-color-flat-icons-2.png
 
 __version__ = (2, 0, 0)
 
@@ -21,8 +23,6 @@ from .. import loader, utils
 logger = logging.getLogger(__name__)
 
 
-@loader.unrestricted
-@loader.ratelimit
 @loader.tds
 class GoogleItMod(loader.Module):
     """Module for screenshot web site"""
@@ -67,8 +67,6 @@ class GoogleItMod(loader.Module):
          <url>=str <width>=int <height>=int
         .screenweb https://google.com/
         .screenweb https://vsecoder.ml/ 1920 1080
-        Based on... my code and screenshot api)
-        Made with <3 by @vsecoder
         """
         args = utils.get_args_raw(message)
         args = args.split(" ")

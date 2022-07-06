@@ -9,6 +9,8 @@
     This program is free software; you can redistribute it and/or modify 
 
 """
+# meta developer: @vsecoder_m
+# meta pic: https://img.icons8.com/external-filled-outline-wichaiwi/344/external-page-uxui-design-filled-outline-wichaiwi.png
 
 __version__ = (2, 0, 0)
 
@@ -18,8 +20,6 @@ from .. import loader, utils
 
 logger = logging.getLogger(__name__)
 
-@loader.unrestricted
-@loader.ratelimit
 @loader.tds
 class BioPageMod(loader.Module):
     """Module for create bio page"""

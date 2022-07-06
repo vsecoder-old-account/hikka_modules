@@ -10,6 +10,7 @@
 
 """
 # meta developer: @vsecoder_m
+# meta pic: https://img.icons8.com/fluency/344/pen-1.png
 
 __version__ = (1, 0, 0)
 
@@ -18,12 +19,9 @@ from .. import loader, utils
 
 import datetime as dt
 import re
-#import humanize
 
 logger = logging.getLogger(__name__)
 
-@loader.unrestricted
-@loader.ratelimit
 @loader.tds
 class FormatterMod(loader.Module):
     """

@@ -10,6 +10,9 @@
 
     Thk @fleef
 """
+# meta developer: @vsecoder_m
+# meta pic: https://img.icons8.com/avantgarde/344/experimental-search-avantgarde.png
+
 
 __version__ = (1, 0, 1)
 
@@ -52,8 +55,6 @@ engines_str = '| '
 for engine in engines:
     engines_str += f'{engine} | '
 
-@loader.unrestricted
-@loader.ratelimit
 @loader.tds
 class SearXMod(loader.Module):
     """Module for multi search"""

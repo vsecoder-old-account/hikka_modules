@@ -9,6 +9,8 @@
     This program is free software; you can redistribute it and/or modify 
 
 """
+# meta developer: @vsecoder_m
+# meta pic: https://img.icons8.com/bubbles/344/google-logo.png
 
 __version__ = (2, 0, 0)
 
@@ -19,21 +21,19 @@ from .. import loader, utils
 logger = logging.getLogger(__name__)
 
 
-@loader.unrestricted
-@loader.ratelimit
 @loader.tds
 class GoogleItMod(loader.Module):
     """Module for google search"""
 
     strings = {
         "name": "Google it",
-        "cfg_lingva_url": "Look for the answer to your question in Google",
+        "cfg_searc_url": "Searcher",
         "answer": "😒 I advise you to start looking in the search engine: ",
         "error": "Error!\n .googleit | text",
     }
 
     strings_ru = {
-        "cfg_lingva_url": "Поищи ответ на свой вопрос в гугле",
+        "cfg_searc_url": "Поисковик",
         "answer": "😒 Советую поискать для начала в поисковике: ",
         "error": "Ошибка!\n \n .googleit | text",
     }
@@ -64,7 +64,6 @@ class GoogleItMod(loader.Module):
     async def googleitcmd(self, message):
         """
          {text} - text to search
-        Based on t.me/vsecoder code
         """
         args = message.text.replace(f"{self.get_prefix()}googleit ", "")
         if args:

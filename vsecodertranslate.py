@@ -10,6 +10,7 @@
 
 """
 # meta developer: @vsecoder_m
+# meta pic: https://img.icons8.com/external-vitaliy-gorbachev-lineal-color-vitaly-gorbachev/344/external-translate-online-learning-vitaliy-gorbachev-lineal-color-vitaly-gorbachev.png
 
 __version__ = (2, 2, 1)
 
@@ -21,8 +22,6 @@ from .. import loader, utils
 logger = logging.getLogger(__name__)
 
 
-@loader.unrestricted
-@loader.ratelimit
 @loader.tds
 class VseTranslateMod(loader.Module):
 

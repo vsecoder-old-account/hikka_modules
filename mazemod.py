@@ -9,6 +9,8 @@
     This program is free software; you can redistribute it and/or modify 
 
 """
+# meta developer: @vsecoder_m
+# meta pic: https://img.icons8.com/external-icongeek26-linear-colour-icongeek26/344/external-maze-game-development-icongeek26-linear-colour-icongeek26.png
 
 __version__ = (2, 0, 0)
 
@@ -123,8 +125,6 @@ class Maze:
 
         return self.maze
 
-@loader.unrestricted
-@loader.ratelimit
 @loader.tds
 class MazeModMod(loader.Module):
     """Module for play maze"""
