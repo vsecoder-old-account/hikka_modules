@@ -35,15 +35,6 @@ class GifCatsMod(loader.Module):
         self._client = client
         self._url = ''
         await client(JoinChannelRequest('simpampulki'))
-        await self.save_stat("download")
-
-    async def save_stat(self, state):
-        bot = "@modules_stat_bot"
-        m = await self._client.send_message(bot, f"/{state} gifcats")
-        await self._client.delete_messages(bot, m)
-
-    async def on_unload(self):
-        await self.save_stat("unload")
 
     def __init__(self):
         self.config = loader.ModuleConfig(

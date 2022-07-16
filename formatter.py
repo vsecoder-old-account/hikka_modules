@@ -50,16 +50,6 @@ class FormatterMod(loader.Module):
         self._client = client
 
         self.me = await client.get_me()
-        
-        await self.save_stat("download")
-
-    async def save_stat(self, state):
-        bot = "@modules_stat_bot"
-        m = await self._client.send_message(bot, f"/{state} formatter")
-        await self._client.delete_messages(bot, m)
-
-    async def on_unload(self):
-        await self.save_stat("unload")
 
     async def watcher(self, message):
         try:

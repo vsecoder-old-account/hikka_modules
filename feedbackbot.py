@@ -69,15 +69,6 @@ class FeedbackBotMod(loader.Module):
         f"🔗 Feedback link: t.me/{self.inline.bot_username}?start=feedback\n\n" \
         "❌ Toggle in .security \"✅ Everyone (inline)\" to use"
 
-        await self.save_stat("download")
-
-    async def save_stat(self, state):
-        bot = "@modules_stat_bot"
-        m = await self._client.send_message(bot, f"/{state} feedbackbot")
-        await self._client.delete_messages(bot, m)
-
-    async def on_unload(self):
-        await self.save_stat("unload")
 
     async def aiogram_watcher(self, message: AiogramMessage):
         if message.text == "/start feedback":

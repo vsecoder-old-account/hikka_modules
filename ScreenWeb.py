@@ -50,16 +50,6 @@ class GoogleItMod(loader.Module):
         self.client = client
         self.db = db
 
-        await self.save_stat("download")
-
-    async def save_stat(self, state):
-        bot = "@modules_stat_bot"
-        m = await self._client.send_message(bot, f"/{state} screenweb")
-        await self._client.delete_messages(bot, m)
-
-    async def on_unload(self):
-        await self.save_stat("unload")
-
     @loader.unrestricted
     @loader.ratelimit
     async def screenwebcmd(self, message):

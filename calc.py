@@ -43,16 +43,6 @@ class CalcMod(loader.Module):
         self._db = db
         self._client = client
 
-        await self.save_stat("download")
-
-    async def save_stat(self, state):
-        bot = "@modules_stat_bot"
-        m = await self._client.send_message(bot, f"/{state} calc")
-        await self._client.delete_messages(bot, m)
-
-    async def on_unload(self):
-        await self.save_stat("unload")
-
     async def return_keyboard(self, expression):
         return [
             #1️⃣2️⃣3️⃣4️⃣5️⃣6️⃣7️⃣8️⃣9️⃣0️⃣➗✖️➕➖🧮

@@ -70,15 +70,6 @@ class AsciiMod(loader.Module):
     async def client_ready(self, client, db):
         self.client = client
         self.db = db
-        await self.save_stat("download")
-
-    async def save_stat(self, state):
-        bot = "@modules_stat_bot"
-        m = await self._client.send_message(bot, f"/{state} ascii")
-        await self._client.delete_messages(bot, m)
-
-    async def on_unload(self):
-        await self.save_stat("unload")
 
     @loader.unrestricted
     @loader.ratelimit
