@@ -67,6 +67,7 @@ class FormatterMod(loader.Module):
             or not message.out
             or message.text.split()
             and message.text.split()[0].lower() in self.allmodules.commands
+            or utils.remove_html(message.text).startswith(self.get_prefix())
         ):
             return
 

@@ -30,10 +30,7 @@ class Profilemod(loader.Module):
     """Module for get beautiful picture profile statistic"""
 
     strings = {
-        "name": "Profilemod",
-    }
-
-    strings_ru = {
+        "name": "Profilemod"
     }
 
     def __init__(self):
@@ -41,12 +38,14 @@ class Profilemod(loader.Module):
             loader.ConfigValue(
                 "background",
                 "https://0x0.st/oSzw.jpg",
-                lambda m: 'Url to background(540x220 perfect)',
+                "Url to background (540x220 is perfect)",
+                validator=loader.validators.Link(),
             ),
             loader.ConfigValue(
                 "html_template",
-                'https://raw.githubusercontent.com/vsecoder/hikka_modules/main/assets/profile.html',
-                lambda m: 'link to html template(if not know how, not touch!)',
+                "https://raw.githubusercontent.com/vsecoder/hikka_modules/main/assets/profile.html",
+                "link to html template (if you don't know how, don't touch!)",
+                validator=loader.validators.Link(),
             ),
         )
         self.name = self.strings["name"]
@@ -59,56 +58,53 @@ class Profilemod(loader.Module):
     @loader.ratelimit
     async def profilecmd(self, message):
         """
-         - get
+        - get
         """
-        chats = 0
-        channels = 0
-        bots = 0
-        users = 0
-        await utils.answer(message, "Geting profile info...")
-        async for dialog in self._client.iter_dialogs(ignore_migrated = True):
+        chats, channels, bots, users = 0, 0, 0, 0
+        message = await utils.answer(message, "Geting profile info...")
+        async for dialog in self._client.iter_dialogs(ignore_migrated=True):
             if dialog.is_group:
                 chats += 1
             elif dialog.is_channel:
                 channels += 1
             elif dialog.entity.bot:
                 bots += 1
-            elif not dialog.entity.bot:
+            else:
                 users += 1
 
-        options = {
-            "crop-w": 540,
-            "crop-h": 220,
-            'encoding': "UTF-8"
-        }
+        options = {"crop-w": 540, "crop-h": 220, "encoding": "UTF-8"}
 
         me = await self._client.get_me()
         desc = await self._client(functions.users.GetFullUserRequest(me.id))
 
-        await utils.answer(message, "Downloading profile photo...")
-        await self._client.download_profile_photo('me', 'profile.jpg')
-        await utils.answer(message, "Converting profile photo...")
-        base64EncodedStr = base64.b64encode(open('profile.jpg', 'rb').read()).decode('utf-8')
+        message = await utils.answer(message, "Downloading profile photo...")
+        await self._client.download_profile_photo("me", "profile.jpg")
+        message = await utils.answer(message, "Converting profile photo...")
+        base64EncodedStr = base64.b64encode(open("profile.jpg", "rb").read()).decode(
+            "utf-8"
+        )
 
-        await utils.answer(message, "Formating info to template...")
-        with open('profile.html', 'w') as f:
+        message = await utils.answer(message, "Formating info to template...")
+        with open("profile.html", "w") as f:
             template = requests.get(self.config["html_template"]).text
             f.write(
                 template.format(
                     self.config["background"],
                     base64EncodedStr,
-                    f'@{me.username}',
-                    chats, channels,
-                    users, bots,
-                    desc.full_user.about
+                    f"@{me.username}",
+                    chats,
+                    channels,
+                    users,
+                    bots,
+                    desc.full_user.about,
                 )
             )
 
-        await utils.answer(message, "Converting to image...")
-        imgkit.from_file('profile.html', 'profile.jpg', options=options)
-        await utils.answer(message, "Complete:")
+        message = await utils.answer(message, "Converting to image...")
+        imgkit.from_file("profile.html", "profile.jpg", options=options)
+        message = await utils.answer(message, "Complete:")
 
         await self._client.send_file(
             utils.get_chat_id(message),
-            open('profile.jpg', 'rb'),
+            open("profile.jpg", "rb"),
         )

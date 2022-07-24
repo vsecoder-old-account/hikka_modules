@@ -15,13 +15,12 @@
 __version__ = (2, 0, 0)
 
 import logging
-from math import sqrt
-from unittest import result
-from telethon import TelegramClient 
+from telethon import TelegramClient
 from .. import loader
 from ..inline.types import InlineCall
 
 logger = logging.getLogger(__name__)
+
 
 @loader.tds
 class CalcMod(loader.Module):
@@ -29,13 +28,13 @@ class CalcMod(loader.Module):
 
     strings = {
         "name": "📟 Calc",
-        "answer": ("🧮 <b>Start calculating(press inline buttons):</b>"),
-        "calc": ("🧮 <i>{0}</i>=<code>{1}</code>"),
+        "answer": "🧮 <b>Start calculating(press inline buttons):</b>",
+        "calc": "🧮 <i>{0}</i>=<code>{1}</code>",
         "error": "❗️ Error!",
     }
 
     strings_ru = {
-        "answer": ("🧮 <b>Начните подсчитывать(нажимайте на инлайн кнопки):</b>"),
+        "answer": "🧮 <b>Начните подсчитывать(нажимайте на инлайн кнопки):</b>",
         "error": "❗️ Ошибка!",
     }
 
@@ -45,8 +44,8 @@ class CalcMod(loader.Module):
 
     async def return_keyboard(self, expression):
         return [
-            #1️⃣2️⃣3️⃣4️⃣5️⃣6️⃣7️⃣8️⃣9️⃣0️⃣➗✖️➕➖🧮
-            [  
+            # 1️⃣2️⃣3️⃣4️⃣5️⃣6️⃣7️⃣8️⃣9️⃣0️⃣➗✖️➕➖🧮
+            [
                 {"text": "1️⃣", "callback": self.calc, "args": ["1", expression]},
                 {"text": "2️⃣", "callback": self.calc, "args": ["2", expression]},
                 {"text": "3️⃣", "callback": self.calc, "args": ["3", expression]},
@@ -70,36 +69,33 @@ class CalcMod(loader.Module):
                 {"text": "➗", "callback": self.calc, "args": ["/", expression]},
                 {"text": "🔙", "callback": self.calc, "args": ["C", expression]},
                 {"text": "✖️", "callback": self.calc, "args": ["*", expression]},
-            ]
+            ],
         ]
 
     async def calc(self, message: InlineCall, press, expression):
-        if expression == '0':
-            expression = ''
+        if expression == "0":
+            expression = ""
         if press == "C":
             expression = expression[:-1]
         else:
             expression = expression + press
 
-        a = ['+', '-', '*', '/', '=', 'C']
+        a = ["+", "-", "*", "/", "=", "C"]
         b = False
         for i in a:
             if press == i:
                 b = True
 
-        if b == False and expression != '' and expression != '0':
+        if b == False and expression != "" and expression != "0":
             result = eval(expression)
         else:
-            result = ''
+            result = ""
 
         text = self.strings["calc"].format(expression, result)
 
         keyboard = await self.return_keyboard(expression)
 
-        await message.edit(
-            text=text,
-            reply_markup=keyboard
-        )
+        await message.edit(text=text, reply_markup=keyboard)
 
     @loader.unrestricted
     @loader.ratelimit
@@ -120,5 +116,5 @@ class CalcMod(loader.Module):
             text=text,
             message=message,
             always_allow=[message.from_id],
-            reply_markup=keyboard
+            reply_markup=keyboard,
         )

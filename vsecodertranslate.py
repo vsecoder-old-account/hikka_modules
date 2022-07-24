@@ -14,7 +14,6 @@
 
 __version__ = (2, 2, 1)
 
-from fnmatch import translate
 import logging
 import translators as vt
 from .. import loader, utils
@@ -28,13 +27,18 @@ class VseTranslateMod(loader.Module):
     strings = {
         "name": "💠 Vsecoder Translate",
         "invalid_args": "📥 Invalid arguments!",
-        "answer": ("💠 <b>{}</b> <i>from:</i><b>[{}]</b> <i>to:</i><b>[{}]</b>\n\n<code>{}</code>"),
+        "answer": (
+            "💠 <b>{}</b> <i>from:</i><b>[{}]</b>"
+            " <i>to:</i><b>[{}]</b>\n\n<code>{}</code>"
+        ),
         "error": "📥 Error!",
     }
 
     strings_ru = {
         "invalid_args": "📥 Неправильные аргументы!",
-        "answer": ("💠 <b>{}</b> <i>с:</i><b>[{}]</b> <i>на:</i><b>[{}]</b>\n\n<code>{}</code>"),
+        "answer": (
+            "💠 <b>{}</b> <i>с:</i><b>[{}]</b> <i>на:</i><b>[{}]</b>\n\n<code>{}</code>"
+        ),
         "error": "📥 Ошибка!",
     }
 
@@ -43,38 +47,48 @@ class VseTranslateMod(loader.Module):
             loader.ConfigValue(
                 "default_lang",
                 "ru",
-                lambda: "Which language to translate by default(ru/en/de/fr/es/it/pt/ja/zh/ko)",
+                "Which language to translate by default",
+                validator=loader.validators.Choice(
+                    ["ru", "en", "de", "fr", "es", "it", "pt", "ja", "zh", "ko"]
+                ),
             ),
             loader.ConfigValue(
                 "default_translator",
                 "google",
-                lambda: "Which translator to use by default(google/yandex/bing/iciba)",
+                "Which translator to use by default",
+                validator=loader.validators.Choice(
+                    ["google", "yandex", "bing", "iciba"]
+                ),
             ),
         )
 
-    async def client_ready(self, client, db):
+    async def client_ready(self, client, _):
         self._client = client
-        
 
-    async def translate(self, text, lang_from="auto", lang_to="ru", translator="google"):
+    async def translate(
+        self,
+        text: str,
+        lang_from: str = "auto",
+        lang_to: str = "ru",
+        translator: str = "google",
+    ) -> str:
         translators = {
             "google": vt.google,
             "yandex": vt.yandex,
             "bing": vt.bing,
             "iciba": vt.iciba,
         }
+
         if translator not in translators:
             return self.strings("invalid_translator")
 
         translater = translators[translator]
-        result = {
+        return {
             "translator": translator,
             "from": lang_from,
             "to": lang_to,
             "text": translater(text, from_language=lang_from, to_language=lang_to),
         }
-        return result
-
 
     async def vsetranslatecmd(self, message):
         """
@@ -82,38 +96,57 @@ class VseTranslateMod(loader.Module):
         .vsetranslate en ru Hello, world!
         """
         args = utils.get_args(message)
-        langs = [
-            "auto", "ru", "en", "de", "fr", "es", "it", "pt", "ja", "zh", "ko"
-        ]
-        translators = [
-            "google", "yandex", "bing", "iciba"
-        ]
+        langs = ["auto", "ru", "en", "de", "fr", "es", "it", "pt", "ja", "zh", "ko"]
+        translators = ["google", "yandex", "bing", "iciba"]
         text = message.text.replace(f"{self.get_prefix()}vsetranslate", "")
         t = ""
         if not args:
             return await utils.answer(message, self.strings("invalid_args"))
-        if args[0] not in langs:                                # .vsetranslate text
-            t = await self.translate(text, translator=self.config["default_translator"], lang_to=self.config["default_lang"])
-        elif args[1] not in langs and args[0] in langs:         # .vsetranslate from_language text
-            text = message.text.replace(f"{self.get_prefix()}vsetranslate {args[0]}", "")
-            t = await self.translate(text, translator=self.config["default_translator"], lang_to=self.config["default_lang"], lang_from=args[0])
-        elif args[2] not in translators and args[1] in langs:   # .vsetranslate from_language to_language text
-            text = message.text.replace(f"{self.get_prefix()}vsetranslate {args[0]} {args[1]}", "")
+        if args[0] not in langs:  # .vsetranslate text
             t = await self.translate(
-                text, 
+                text,
                 translator=self.config["default_translator"],
-                lang_to=args[1], 
-                lang_from=args[0]
+                lang_to=self.config["default_lang"],
             )
-        else:                                                   # .vsetranslate from_language to_language translator text
-            text = message.text.replace(f"{self.get_prefix()}vsetranslate {args[0]} {args[1]} {args[2]}", "")
+        elif args[1] not in langs:  # .vsetranslate from_language text
+            text = message.text.replace(
+                f"{self.get_prefix()}vsetranslate {args[0]}", ""
+            )
             t = await self.translate(
-                text, 
+                text,
+                translator=self.config["default_translator"],
+                lang_to=self.config["default_lang"],
+                lang_from=args[0],
+            )
+        elif args[2] not in translators:  # .vsetranslate from_language to_language text
+            text = message.text.replace(
+                f"{self.get_prefix()}vsetranslate {args[0]} {args[1]}", ""
+            )
+            t = await self.translate(
+                text,
+                translator=self.config["default_translator"],
+                lang_to=args[1],
+                lang_from=args[0],
+            )
+        else:  # .vsetranslate from_language to_language translator text
+            text = message.text.replace(
+                f"{self.get_prefix()}vsetranslate {args[0]} {args[1]} {args[2]}", ""
+            )
+            t = await self.translate(
+                text,
                 translator=args[2],
-                lang_to=args[1], 
-                lang_from=args[0]
+                lang_to=args[1],
+                lang_from=args[0],
             )
         try:
-            return await utils.answer(message, self.strings("answer").format(t["translator"], t["from"], t["to"], t["text"]))
-        except:
-            return await utils.answer(message, self.strings("error"))
+            await utils.answer(
+                message,
+                self.strings("answer").format(
+                    t["translator"],
+                    t["from"],
+                    t["to"],
+                    t["text"],
+                ),
+            )
+        except Exception:
+            await utils.answer(message, self.strings("error"))

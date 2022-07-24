@@ -11,16 +11,15 @@
 """
 # meta developer: @vsecoder_m
 # meta pic: https://img.icons8.com/color/344/asc.png
+# requires: Pillow
 
 __version__ = (0, 0, 1)
 
 import logging
 from .. import loader, utils
 import imgkit
-try:
-    from PIL import Image
-except:
-    raise Exception("Your server haven't Pillow(read: https://www.geeksforgeeks.org/how-to-install-pil-on-linux/) or doesn't support this module(Pillow)")
+
+from PIL import Image
 
 from image2ascii.core import Image2ASCII
 
@@ -36,20 +35,24 @@ class AsciiMod(loader.Module):
         "loading_image": "⏳ Downloading image...",
         "converting_image": "⏳ Converting image...",
         "save_image": "⏳ Saving image...",
-        "os_error": ("❗️ Install 'wkhtmltopdf'\n\n.terminal sudo apt install wkhtmltopdf"),
+        "os_error": (
+            "❗️ Install 'wkhtmltopdf'\n\n.terminal sudo apt install wkhtmltopdf"
+        ),
         "type_error": "❗️ Unknown image format!",
         "another_error": "❗️ Unknown error, please check logs!\n\n{}",
-        "complete": "🖍 Look:"
+        "complete": "🖍 Look:",
     }
 
     strings_ru = {
         "loading_image": "⏳ Скачивается изображение...",
         "converting_image": "⏳ Конвертируется изображение...",
         "save_image": "⏳ Сохраняется изображение...",
-        "os_error": ("❗️ Установите 'wkhtmltopdf'\n\n.terminal sudo apt install wkhtmltopdf"),
+        "os_error": (
+            "❗️ Установите 'wkhtmltopdf'\n\n.terminal sudo apt install wkhtmltopdf"
+        ),
         "type_error": "❗️ Неизвестный формат изображения!",
         "another_error": "❗️ Неизвестная ошибка, пожайлуйста проверьте логи!\n\n{}",
-        "complete": "🖍 Смотри:"
+        "complete": "🖍 Смотри:",
     }
 
     def __init__(self):
@@ -57,12 +60,12 @@ class AsciiMod(loader.Module):
             loader.ConfigValue(
                 "background",
                 "black",
-                lambda m: 'Background',
+                lambda m: "Background",
             ),
             loader.ConfigValue(
                 "color",
                 "white",
-                lambda m: 'Color',
+                lambda m: "Color",
             ),
         )
         self.name = self.strings["name"]
@@ -75,43 +78,42 @@ class AsciiMod(loader.Module):
     @loader.ratelimit
     async def asciicmd(self, message):
         """
-         <reply_to_image> - convert image to ascii
+        <reply_to_image> - convert image to ascii
         """
         try:
             reply = await message.get_reply_message()
 
             await utils.answer(message, self.strings("loading_image"))
-            f = await self._client.download_media(message=reply, file='test.png')
+            f = await self._client.download_media(message=reply, file="test.png")
             await utils.answer(message, self.strings("converting_image"))
-            r = Image2ASCII('test.png').render()
+            r = Image2ASCII("test.png").render()
 
-            ascii = ''
             background = self.config["background"]
             color = self.config["color"]
 
-            im = Image.open('test.png')
+            im = Image.open("test.png")
             width, height = im.size
 
-            options = {
-                "crop-w": width,
-                "crop-h": height,
-                'encoding': "UTF-8"
-            }
+            options = {"crop-w": width, "crop-h": height, "encoding": "UTF-8"}
 
-            for line in str(r).split('\n'):
-                ascii += str(line).replace(' ', '&nbsp;') + '<br>'
+            ascii = "".join(
+                str(line).replace(" ", "&nbsp;") + "<br>" for line in str(r).split("\n")
+            )
 
             await utils.answer(message, self.strings("save_image"))
 
-            with open('test.html', 'w') as f:
-                f.write(f'<html style="background: {background}; color: {color}"><code>{ascii}</code></html>')
+            with open("test.html", "w") as f:
+                f.write(
+                    f'<html style="background: {background}; color:'
+                    f' {color}"><code>{ascii}</code></html>'
+                )
 
             try:
-                imgkit.from_file('test.html', 'out.jpg', options=options)
+                imgkit.from_file("test.html", "out.jpg", options=options)
 
                 await self._client.send_file(
                     utils.get_chat_id(message),
-                    open('out.jpg', 'rb'),
+                    open("out.jpg", "rb"),
                 )
                 await utils.answer(message, self.strings("complete"))
             except OSError:

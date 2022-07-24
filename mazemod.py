@@ -16,18 +16,19 @@ __version__ = (2, 0, 0)
 
 import logging
 import random
-from telethon import TelegramClient 
+from telethon import TelegramClient
 from .. import loader
 from ..inline.types import InlineCall
 
 logger = logging.getLogger(__name__)
+
 
 class Maze:
     def __init__(self, rowsNumber, columnsNumber):
         self.rowsNumber = rowsNumber
         self.columnsNumber = columnsNumber
         self.maze = []
-    
+
     def isEven(self, number):
         return number % 2 == 0
 
@@ -49,57 +50,55 @@ class Maze:
     def isMaze(self):
         for x in range(self.columnsNumber):
             for y in range(self.rowsNumber):
-                if self.isEven(x) and self.isEven(y) and self.getField(x, y) == '⬜️':
+                if self.isEven(x) and self.isEven(y) and self.getField(x, y) == "⬜️":
                     return False
 
         return True
 
     def moveTractor(self, tractor):
         directs = []
-        if tractor['x'] > 0:
-            directs.append('left')
+        if tractor["x"] > 0:
+            directs.append("left")
 
         n = self.columnsNumber - 2
 
-        if tractor['x'] < n:
-            directs.append('right')
+        if tractor["x"] < n:
+            directs.append("right")
 
-        if tractor['y'] > 0:
-            directs.append('up')
+        if tractor["y"] > 0:
+            directs.append("up")
 
         n = self.rowsNumber - 2
 
-        if tractor['y'] < n:
-            directs.append('down')
+        if tractor["y"] < n:
+            directs.append("down")
 
         direct = self.getRandomFrom(directs)
 
-        if direct == 'left':
-            if self.getField(tractor['x'] - 2, tractor['y']) == '⬜️':
-                self.setField(tractor['x'] - 1, tractor['y'], '⬛️')
-                self.setField(tractor['x'] - 2, tractor['y'], '⬛️')
-            tractor['x'] -= 2
-        if direct == 'right':
-            if self.getField(tractor['x'] + 2, tractor['y']) == '⬜️':
-                self.setField(tractor['x'] + 1, tractor['y'], '⬛️')
-                self.setField(tractor['x'] + 2, tractor['y'], '⬛️')
-            tractor['x'] += 2
-        if direct == 'up':
-            if self.getField(tractor['x'], tractor['y'] - 2) == '⬜️':
-                self.setField(tractor['x'], tractor['y'] - 1, '⬛️')
-                self.setField(tractor['x'], tractor['y'] - 2, '⬛️')
-            tractor['y'] -= 2
-        if direct == 'down':
-            if self.getField(tractor['x'], tractor['y'] + 2) == '⬜️':
-                self.setField(tractor['x'], tractor['y'] + 1, '⬛️')
-                self.setField(tractor['x'], tractor['y'] + 2, '⬛️')
-            tractor['y'] += 2
+        if direct == "left":
+            if self.getField(tractor["x"] - 2, tractor["y"]) == "⬜️":
+                self.setField(tractor["x"] - 1, tractor["y"], "⬛️")
+                self.setField(tractor["x"] - 2, tractor["y"], "⬛️")
+            tractor["x"] -= 2
+        if direct == "right":
+            if self.getField(tractor["x"] + 2, tractor["y"]) == "⬜️":
+                self.setField(tractor["x"] + 1, tractor["y"], "⬛️")
+                self.setField(tractor["x"] + 2, tractor["y"], "⬛️")
+            tractor["x"] += 2
+        if direct == "up":
+            if self.getField(tractor["x"], tractor["y"] - 2) == "⬜️":
+                self.setField(tractor["x"], tractor["y"] - 1, "⬛️")
+                self.setField(tractor["x"], tractor["y"] - 2, "⬛️")
+            tractor["y"] -= 2
+        if direct == "down":
+            if self.getField(tractor["x"], tractor["y"] + 2) == "⬜️":
+                self.setField(tractor["x"], tractor["y"] + 1, "⬛️")
+                self.setField(tractor["x"], tractor["y"] + 2, "⬛️")
+            tractor["y"] += 2
 
     def generate_map(self):
-        for i in range(self.rowsNumber):
-            row = []
-            for j in range(self.columnsNumber):
-                row.append('⬜️')
+        for _ in range(self.rowsNumber):
+            row = ["⬜️" for _ in range(self.columnsNumber)]
             self.maze.append(row)
 
         evenColums = []
@@ -107,23 +106,19 @@ class Maze:
             if self.isEven(column):
                 evenColums.append(column)
 
-        evenRows = []
-        for row in range(self.rowsNumber):
-            if self.isEven(column):
-                evenRows.append(row)
-
+        evenRows = [row for row in range(self.rowsNumber) if self.isEven(column)]
         startX = 2
         startY = 2
 
+        tractor = {"x": startX, "y": startY}
 
-        tractor = {'x': startX, 'y': startY}
-
-        self.setField(startX, startY, '⬛️')
+        self.setField(startX, startY, "⬛️")
 
         while not self.isMaze():
             self.moveTractor(tractor)
 
         return self.maze
+
 
 @loader.tds
 class MazeModMod(loader.Module):
@@ -132,7 +127,7 @@ class MazeModMod(loader.Module):
     strings = {
         "name": "MazeMod",
         "cfg_maze_width": "Maze width and height, default is 30x30",
-        "answer": ('🕹 <b>Click on the inline buttons to move:</b> <i>{0}</i>'),
+        "answer": "🕹 <b>Click on the inline buttons to move:</b> <i>{0}</i>",
         "doc": "\n 🟦 - player \n ⬛️ - road\n ⬜️ - wall\n 🟩 - finish\n",
         "move": "▶️ Moved\n",
         "not_allowed": "💭 Not allowed\n",
@@ -141,7 +136,7 @@ class MazeModMod(loader.Module):
     }
 
     strings_ru = {
-        "answer": ('🕹 <b>Нажимайте на инлайн кнопки что двигаться:</b> <i>{0}</i>'),
+        "answer": "🕹 <b>Нажимайте на инлайн кнопки что двигаться:</b> <i>{0}</i>",
         "doc": "\n 🟦 - игрок \n ⬛️ - дорога\n ⬜️ - стена\n 🟩 - финиш\n",
         "move": "▶️ Передвинулся\n",
         "not_allowed": "💭 Не разрешено\n",
@@ -163,51 +158,52 @@ class MazeModMod(loader.Module):
 
     async def render(self, message: InlineCall, press, maze, player):
         text = self.strings["answer"].format(self.strings["not_allowed"])
-        move = {'x': player['x'], 'y': player['y']}
-        if press == 'up':
-            move['y'] = move['y'] - 1
-        if press == 'left':
-            move['x'] = move['x'] - 1
-        if press == 'down':
-            move['y'] = move['y'] + 1
-        if press == 'right':
-            move['x'] = move['x'] + 1
+        move = {"x": player["x"], "y": player["y"]}
+        if press == "up":
+            move["y"] = move["y"] - 1
+        if press == "left":
+            move["x"] = move["x"] - 1
+        if press == "down":
+            move["y"] = move["y"] + 1
+        if press == "right":
+            move["x"] = move["x"] + 1
 
-        if maze[move['y']][move['x']] == '⬜':
+        if maze[move["y"]][move["x"]] == "⬜":
             pass
-        elif maze[move['y']][move['x']] == '⬛️':
-            maze[player['y']][player['x']] = '⬛️'
+        elif maze[move["y"]][move["x"]] == "⬛️":
+            maze[player["y"]][player["x"]] = "⬛️"
             player = move
             text = self.strings["answer"].format(self.strings["move"])
-        elif maze[move['y']][move['x']] == '🟩':
+        elif maze[move["y"]][move["x"]] == "🟩":
             text = self.strings["win"]
             return await message.edit(text=text)
 
-        maze[player['y']][player['x']] = '🟦'
+        maze[player["y"]][player["x"]] = "🟦"
 
         keyboard = [
-            [  
+            [
                 {"text": "🔼", "callback": self.render, "args": ["up", maze, player]},
             ],
             [
                 {"text": "◀️", "callback": self.render, "args": ["left", maze, player]},
-                {"text": "▶️", "callback": self.render, "args": ["right", maze, player]},
+                {
+                    "text": "▶️",
+                    "callback": self.render,
+                    "args": ["right", maze, player],
+                },
             ],
             [
                 {"text": "🔽", "callback": self.render, "args": ["down", maze, player]},
-            ]
+            ],
         ]
 
         for column in maze:
             for row in column:
                 for i in row:
                     text = text + i
-            text = text + '\n'
+            text = text + "\n"
 
-        await message.edit(
-            text=text,
-            reply_markup=keyboard
-        )
+        await message.edit(text=text, reply_markup=keyboard)
 
     @loader.unrestricted
     @loader.ratelimit
@@ -220,34 +216,46 @@ class MazeModMod(loader.Module):
         generate = Maze(size, size)
         maze = generate.generate_map()
 
-        player = {'x': 0, 'y': 0}
-        maze[player['y']][player['x']] = '🟦'
-        maze[size-2][size-2] = '🟩'
+        player = {"x": 0, "y": 0}
+        maze[player["y"]][player["x"]] = "🟦"
+        maze[size - 2][size - 2] = "🟩"
 
         text = self.strings["answer"].format(self.strings["doc"])
         keyboard = [
-            [  
+            [
                 {"text": "🔼", "callback": self.render, "args": ["up", maze, player]},
             ],
             [
                 {"text": "◀️", "callback": self.render, "args": ["left", maze, player]},
-                {"text": "▶️", "callback": self.render, "args": ["right", maze, player]},
+                {
+                    "text": "▶️",
+                    "callback": self.render,
+                    "args": ["right", maze, player],
+                },
             ],
             [
-                {"text": "🔽", "callback": self.render, "args": ["down", maze, player,]},
-            ]
+                {
+                    "text": "🔽",
+                    "callback": self.render,
+                    "args": [
+                        "down",
+                        maze,
+                        player,
+                    ],
+                },
+            ],
         ]
 
         for column in maze:
             for row in column:
                 for i in row:
                     text = text + i
-            text = text + '\n'
+            text = text + "\n"
 
         await message.delete()
         await self.inline.form(
             text=text,
             message=message,
             always_allow=[message.from_id],
-            reply_markup=keyboard
+            reply_markup=keyboard,
         )

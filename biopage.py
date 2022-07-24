@@ -15,10 +15,10 @@
 __version__ = (2, 0, 0)
 
 import logging
-from aiogram.types import Message as AiogramMessage
 from .. import loader, utils
 
 logger = logging.getLogger(__name__)
+
 
 @loader.tds
 class BioPageMod(loader.Module):
@@ -26,12 +26,14 @@ class BioPageMod(loader.Module):
 
     strings = {
         "name": "Bio Page",
-        "answer": ("📦 The configuration of the <b>BioPage</b> is set to <code>\"{0}\"</code>"),
+        "answer": (
+            '📦 The configuration of the <b>BioPage</b> is set to <code>"{0}"</code>'
+        ),
         "error": "❗️ Error, check logs!",
     }
 
     strings_ru = {
-        "answer": ("📦 Конфигурация <b>BioPage</b> установлена <code>\"{0}\"</code>"),
+        "answer": '📦 Конфигурация <b>BioPage</b> установлена <code>"{0}"</code>',
         "error": "❗️ Ошибка, проверьте логи!",
     }
 
@@ -40,12 +42,14 @@ class BioPageMod(loader.Module):
             loader.ConfigValue(
                 "toggle",
                 "off",
-                lambda m: "Toggle bio page on/off",
+                "Toggle bio page on/off",
+                validator=loader.validators.Boolean(),
             ),
             loader.ConfigValue(
                 "bio_url",
                 "https://vsecoder.github.io/tg-web-app/",
-                lambda m: "Bio page url(need restart toggle)",
+                "Bio page url (restart required to apply)",
+                validator=loader.validators.Link(),
             ),
         )
         self.name = self.strings["name"]
@@ -54,7 +58,7 @@ class BioPageMod(loader.Module):
         self._db = db
         self._client = client
         self.botfather = "@BotFather"
-        
+
     async def bot_conifg(self, toggle):
         if toggle == "on":
             async with self._client.conversation(self.botfather) as conv:
@@ -62,7 +66,7 @@ class BioPageMod(loader.Module):
                 await conv.mark_read()
                 await conv.send_message(f"@{self.inline.bot_username}")
                 await conv.mark_read()
-                await conv.send_message(self.config['bio_url'])
+                await conv.send_message(self.config["bio_url"])
                 await conv.mark_read()
                 await conv.send_message("🔗 Bio")
                 await conv.mark_read()
@@ -72,9 +76,9 @@ class BioPageMod(loader.Module):
                 await conv.mark_read()
                 await conv.send_message(f"@{self.inline.bot_username}")
                 await conv.mark_read()
-                await conv.send_message('/empty')
+                await conv.send_message("/empty")
                 await conv.mark_read()
-        
+
     @loader.unrestricted
     @loader.ratelimit
     async def biotogglecmd(self, message):
@@ -82,13 +86,7 @@ class BioPageMod(loader.Module):
          - toggle bio page(default: off)
         Based on... my code)
         """
-        try:
-            toggle = self.config['toggle']
-            if toggle == 'on':
-                self.config['toggle'] = 'off'
-            else:
-                self.config['toggle'] = 'on'
-            await self.bot_conifg(self.config['toggle'])
-            await utils.answer(message, self.strings["answer"].format(self.config['toggle']))
-        except:
-            pass
+        self.config["toggle"] = not self.config["toggle"]
+        await utils.answer(
+            message, self.strings["answer"].format("on" if self.config["toggle"] else "off")
+        )
