@@ -59,8 +59,8 @@ class BioPageMod(loader.Module):
         self._client = client
         self.botfather = "@BotFather"
 
-    async def bot_conifg(self, toggle):
-        if toggle == "on":
+    async def bot_conifg(self):
+        if self.config["toggle"]:
             async with self._client.conversation(self.botfather) as conv:
                 await conv.send_message("/setmenubutton")
                 await conv.mark_read()
@@ -70,7 +70,7 @@ class BioPageMod(loader.Module):
                 await conv.mark_read()
                 await conv.send_message("🔗 Bio")
                 await conv.mark_read()
-        elif toggle == "off":
+        else:
             async with self._client.conversation(self.botfather) as conv:
                 await conv.send_message("/setmenubutton")
                 await conv.mark_read()
@@ -87,6 +87,7 @@ class BioPageMod(loader.Module):
         Based on... my code)
         """
         self.config["toggle"] = not self.config["toggle"]
+        await self.bot_conifg()
         await utils.answer(
             message, self.strings["answer"].format("on" if self.config["toggle"] else "off")
         )
