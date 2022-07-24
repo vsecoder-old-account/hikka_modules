@@ -37,7 +37,7 @@ class FormatterMod(loader.Module):
     """
     Module for prettifying the formatting of messages 🪛
 
-    📌 For examplr write:
+    📌 For example write:
     --------------------
     Hi, now is {now}, today is {today}, yesterday is {yesterday}, my id is {id}, username is @{username}...
 
