@@ -116,9 +116,8 @@ class FormatterMod(loader.Module):
             "msg": message,
         }
 
-        text = text.format(
-            **{key: utils.escape_html(value) for key, value in formats.items()}
-        )
+        for key, value in formats.items():
+            text = text.replace(key, utils.escape_html(value))
 
         if text and text != message.text or keyboard and keyboard != [[]]:
             await utils.answer(message, text, reply_markup=keyboard)
