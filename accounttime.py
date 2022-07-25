@@ -16,10 +16,12 @@ __version__ = (2, 5, 0)
 
 import logging
 import asyncio
-from typing import Callable
+from typing import Callable, Tuple
 import time
 from dateutil.relativedelta import relativedelta
 import numpy as np
+from datetime import datetime
+from .. import loader, utils
 
 data = {
     "5396587273": 1648014800,
@@ -41,8 +43,9 @@ data = {
     "10000000": 1413331200,
     "7679610": 1389744000,
     "2768409": 1383264000,
-    "1000000": 1380326400
+    "1000000": 1380326400,
 }
+
 
 class Function:
     def __init__(self, order: int = 3):
@@ -51,7 +54,7 @@ class Function:
         self.x, self.y = self._unpack_data()
         self._func = self._fit_data()
 
-    def _unpack_data(self) -> (list, list):
+    def _unpack_data(self) -> Tuple[list, list]:
 
         x_data = np.array(list(map(int, data.keys())))
         y_data = np.array(list(data.values()))
@@ -60,19 +63,15 @@ class Function:
 
     def _fit_data(self) -> Callable[[int], int]:
         fitted = np.polyfit(self.x, self.y, self.order)
-        func = np.poly1d(fitted)
-
-        return func
+        return np.poly1d(fitted)
 
     def add_datapoint(self, pair: tuple):
         pair[0] = str(pair[0])
 
-
         data.update([pair])
 
-
         # update the model with new data
-        #self.x, self.y = self._unpack_data()
+        # self.x, self.y = self._unpack_data()
         self._func = self._fit_data()
 
     def func(self, tg_id: int) -> int:
@@ -84,11 +83,9 @@ class Function:
 
         return value
 
-from datetime import datetime
-from aiogram import types
-from .. import loader, utils
 
 logger = logging.getLogger(__name__)
+
 
 @loader.tds
 class AcTimeMod(loader.Module):
@@ -108,7 +105,9 @@ class AcTimeMod(loader.Module):
     def __init__(self):
         self.config = loader.ModuleConfig(
             "answer_text",
-            "⏳ This account: {0}\n🕰 A registered: {1}\n\nP.S. The module script is trained with the number of requests from different ids, so the data can be refined",
+            "⏳ This account: {0}\n🕰 A registered: {1}\n\nP.S. The module script is"
+            " trained with the number of requests from different ids, so the data can"
+            " be refined",
             lambda m: self.strings("cfg_answer_text", m),
         )
         self.name = self.strings["name"]
@@ -118,12 +117,10 @@ class AcTimeMod(loader.Module):
         self.db = db
 
     def time_format(self, unix_time: int, fmt="%Y-%m-%d") -> str:
-        result = []
-
-        result.append(str(datetime.utcfromtimestamp(unix_time).strftime(fmt)))
+        result = [str(datetime.utcfromtimestamp(unix_time).strftime(fmt))]
 
         d = relativedelta(datetime.now(), datetime.utcfromtimestamp(unix_time))
-        result.append(f'{d.years} years, {d.months} months, {d.days} days')
+        result.append(f"{d.years} years, {d.months} months, {d.days} days")
 
         return result
 
@@ -136,16 +133,22 @@ class AcTimeMod(loader.Module):
         """
         try:
             interpolation = Function()
-            try:
-                reply = await message.get_reply_message()
-            except:
-                reply = False
+            reply = await message.get_reply_message()
+
             if reply:
-                date = self.time_format(unix_time=round(interpolation.func(int(reply.sender.id))))
+                date = self.time_format(
+                    unix_time=round(interpolation.func(int(reply.sender.id)))
+                )
             else:
-                date = self.time_format(unix_time=round(interpolation.func(int(message.from_id))))
-            await utils.answer(message, self.config["answer_text"].format(date[0], date[1]))
+                date = self.time_format(
+                    unix_time=round(interpolation.func(int(message.from_id)))
+                )
+
+            await utils.answer(
+                message, self.config["answer_text"].format(date[0], date[1])
+            )
         except Exception as e:
             await utils.answer(message, f'{self.strings["error"]}\n\n{e}')
-            await asyncio.sleep(5)
-            await message.delete()
+            if message.out:
+                await asyncio.sleep(5)
+                await message.delete()

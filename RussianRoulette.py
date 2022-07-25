@@ -29,11 +29,15 @@ class RussianRouletteMod(loader.Module):
 
     strings = {
         "name": "Russian roulette",
-        "cfg_lingva_url": "1/8 chance of destroying the account, are you taking a chance or are you afraid?)",
+        "cfg_lingva_url": (
+            "1/8 chance of destroying the account, are you taking a chance or are you"
+            " afraid?)"
+        ),
         "answer": "😒 You're lucky, but only now...",
         "answer2": "😏 * the sound of a gunshot *",
         "answer3": "🤨 Were you seriously expecting account deletion?",
         "error": "😡 Ah, EMAE, the revolver broke...",
+        "cfg_real": "If set to `True`, if you lose, your account will be deleted",
     }
 
     strings_ru = {
@@ -46,9 +50,12 @@ class RussianRouletteMod(loader.Module):
 
     def __init__(self):
         self.config = loader.ModuleConfig(
-            "real",
-            "1",
-            lambda m: self.strings("cfg_real", m),
+            loader.ConfigValue(
+                "real",
+                False,
+                self.strings("cfg_real"),
+                validator=loader.validators.Link(),
+            )
         )
         self.name = self.strings["name"]
 
@@ -56,30 +63,27 @@ class RussianRouletteMod(loader.Module):
         self.client = client
         self.db = db
 
-
     @loader.unrestricted
     @loader.ratelimit
     async def revolvercmd(self, message):
         """
-         - to start "Russian roulette"
+        - to start "Russian roulette"
         """
         try:
-            roulette = []
-            real = int(self.config["real"])
-            roulette.append(1)
-            for i in range(7):
-                roulette.append(0)
-
+            roulette = [1]
+            roulette.extend(0 for _ in range(7))
             result = random.choice(roulette)
             if result != 1:
-                await utils.answer(message, self.strings["answer"])
+                await utils.answer(message, self.strings("answer"))
             else:
-                await utils.answer(message, self.strings["answer2"])
+                await utils.answer(message, self.strings("answer2"))
                 await asyncio.sleep(3)
-                if real == '1':
-                    await utils.answer(message, 'gg')
-                    self.client(functions.account.DeleteAccountRequest(reason='Lose in Russian roulette'))
-                else:
-                    await utils.answer(message, self.strings["error"])
-        except:
-            await utils.answer(message, self.strings["error"])
+                await utils.answer(message, "gg")
+                if self.config["real"]:
+                    self.client(
+                        functions.account.DeleteAccountRequest(
+                            reason="Lose in Russian roulette"
+                        )
+                    )
+        except Exception:
+            await utils.answer(message, self.strings("error"))

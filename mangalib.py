@@ -10,30 +10,27 @@
 
 """
 # meta developer: @vsecoder_m
-# meta pic: 
+# meta pic:
 
 __version__ = (1, 0, 1)
 
-import logging, time
-from unicodedata import name
-from telethon.utils import get_display_name
+import logging
 from aiogram.types import Message as AiogramMessage
-from .. import loader, utils
+from .. import loader
 from ..inline.types import InlineCall
 
 from selenium import webdriver
 from selenium.webdriver.support.select import Select
 from bs4 import BeautifulSoup
-from selenium.webdriver.chrome.options import Options  
+from selenium.webdriver.chrome.options import Options
 
 logger = logging.getLogger(__name__)
+
 
 @loader.tds
 class MangaLibMod(loader.Module):
 
-    strings = {
-        "name": "MangaLib",
-    }
+    strings = {"name": "MangaLib"}
 
     async def client_ready(self, client, db):
         self._client = client
@@ -42,60 +39,51 @@ class MangaLibMod(loader.Module):
         self.chrome_options = Options()
         self.chrome_options.add_argument("--headless")
 
-        self.__doc__ = "Модуль для чтения манги 👨‍💻[beta]\n\n" \
-        f"🔗 Ссылка: t.me/{self.inline.bot_username}?start=manga\n" \
-        "❗️ Установите Хромиум одной из команд для использования:\n ▪️ sudo apt install chromium-chromedriver\n ▪️ sudo apt-get install chromium-driver"
-
+        self.__doc__ = (
+            "Модуль для чтения манги 👨‍💻[beta]\n\n🔗 Ссылка:"
+            f" t.me/{self.inline.bot_username}?start=manga\n❗️ Установите Хромиум одной"
+            " из команд для использования:\n ▪️ sudo apt install"
+            " chromium-chromedriver\n ▪️ sudo apt-get install chromium-driver"
+        )
 
     async def requests(self, data):
         driver = webdriver.Chrome(chrome_options=self.chrome_options)
 
-        name = data['name']
-        tom = data['tom']
-        glava = data['glava']
-        page = data['page']
+        name = data["name"]
+        volume = data["volume"]
+        chapter = data["chapter"]
+        page = data["page"]
 
-        driver.get(f"https://mangalib.me/{name}/v{tom}/c{glava}?page={page}")
+        driver.get(f"https://mangalib.me/{name}/v{volume}/c{chapter}?page={page}")
 
         """
         Magic
         """
         driver.find_element(
-            "xpath",
-            "/html/body/div[3]/div/div/div[2]/div/button[2]"
+            "xpath", "/html/body/div[3]/div/div/div[2]/div/button[2]"
         ).click()
 
         element = driver.find_element(
-            "xpath",
-            "/html/body/div[1]/div[3]/div/div[2]/div"
+            "xpath", "/html/body/div[1]/div[3]/div/div[2]/div"
         )
         driver.execute_script("arguments[0].click();", element)
 
         all = BeautifulSoup(driver.page_source)
 
-        imgs = all.find_all('div', class_='reader-view__wrap')[page-1]
-        modal = all.find_all('div', class_='modal__body')
-        pages = len(
-            Select(
-                driver.find_element(
-                    "xpath",
-                    '//*[@id="reader-pages"]'
-                )
-            ).options) + 1
+        imgs = all.find_all("div", class_="reader-view__wrap")[page - 1]
+        modal = all.find_all("div", class_="modal__body")
+        pages = (
+            len(Select(driver.find_element("xpath", '//*[@id="reader-pages"]')).options)
+            + 1
+        )
 
-        src = imgs.find_all('img')[0]['src']
-
-        # костыль
-        glavs = 0
-        toms = 0
+        src = imgs.find_all("img")[0]["src"]
 
         arr = []
-        for p in modal[3].find_all('a'):
+        for p in modal[3].find_all("a"):
             p = p.getText()
-            p = p.replace('\n', '') \
-                .replace('      ', '') \
-                .replace('   ', ' ')
-            p = p.split(' ')
+            p = p.replace("\n", "").replace("      ", "").replace("   ", " ")
+            p = p.split(" ")
 
             arr.append(p)
 
@@ -111,90 +99,105 @@ class MangaLibMod(loader.Module):
             if message.text == "/start manga":
                 await self.inline.bot.send_message(
                     self._tg_id,
-                    (
-                        "👨‍💻 <b>Привет, чтобы продолжить введи <code>/read</code> с параметром - названием манги, "
-                        "которое можно получить с сайта https://mangalib.me, примеры:</b>\n\n"
-                        " ▪️ Наруто - https://mangalib.me/naruto/v1/c0?page=1\n/read naruto\n\n"
-                        " ▪️ One Piece - https://mangalib.me/one-piece/v1/c0?page=1\n/read one-piece\n\n"
-                        "❗️ Аргумент - часть ссылки, https://mangalib.me/<code>one-piece</code>/"
-                    )
+                    "👨‍💻 <b>Привет, чтобы продолжить введи <code>/read</code> с"
+                    " параметром - названием манги, которое можно получить с сайта"
+                    " https://mangalib.me, примеры:</b>\n\n ▪️ Наруто -"
+                    " https://mangalib.me/naruto/v1/c0?page=1\n/read naruto\n\n ▪️ One"
+                    " Piece - https://mangalib.me/one-piece/v1/c0?page=1\n/read"
+                    " one-piece\n\n❗️ Аргумент - часть ссылки,"
+                    " https://mangalib.me/<code>one-piece</code>/",
                 )
-            elif message.text.split(' ')[0] == "/read":
-                args = message.text.split(' ')
+            elif message.text.split(" ")[0] == "/read":
+                args = message.text.split(" ")
                 if len(args) != 2:
                     return await self.inline.bot.send_message(
-                        self._tg_id,
-                        "❗️ Неправильно указан агрумент"
+                        self._tg_id, "❗️ Неправильно указан агрумент"
                     )
-                
-                data = {
-                    "name": args[1],
-                    "tom": 1,
-                    "glava": 1,
-                    "page": 1
-                }
+
+                data = {"name": args[1], "volume": 1, "chapter": 1, "page": 1}
 
                 _markup = self.inline.generate_markup(
                     [
                         [
-                            {"text": "◀️", "data": f"undo/{data['name']}/{data['tom']}/{data['glava']}/{data['page']}"},
-                            {"text": "▶️", "data": f"next/{data['name']}/{data['tom']}/{data['glava']}/{data['page']}"}
+                            {
+                                "text": "◀️",
+                                "data": f"undo/{data['name']}/{data['volume']}/{data['chapter']}/{data['page']}",
+                            },
+                            {
+                                "text": "▶️",
+                                "data": f"next/{data['name']}/{data['volume']}/{data['chapter']}/{data['page']}",
+                            },
                         ],
                         [
-                            {"text": "След.глава ⏭", "data": f"next_glava/{data['name']}/{data['tom']}/{data['glava']}/{data['page']}"}
+                            {
+                                "text": "След.глава ⏭",
+                                "data": f"next_chapter/{data['name']}/{data['volume']}/{data['chapter']}/{data['page']}",
+                            }
                         ],
                         [
-                            {"text": "След.том ⏭", "data": f"next_tom/{data['name']}/{data['tom']}/{data['glava']}/{data['page']}"}
-                        ]
+                            {
+                                "text": "След.том ⏭",
+                                "data": f"next_volume/{data['name']}/{data['volume']}/{data['chapter']}/{data['page']}",
+                            }
+                        ],
                     ]
                 )
 
                 r = await self.requests(data)
                 await self.inline.bot.send_photo(
                     self._tg_id,
-                    f"{r['image']}",
-                    f"{r['page']}",
-                    reply_markup=_markup
+                    r["image"],
+                    r["page"],
+                    reply_markup=_markup,
                 )
 
     async def feedback_callback_handler(self, call: InlineCall):
-        args = call.data.split('/')
+        args = call.data.split("/")
 
         data = {
             "name": args[1],
-            "tom": int(args[2]),
-            "glava": int(args[3]),
-            "page": int(args[4])
+            "volume": int(args[2]),
+            "chapter": int(args[3]),
+            "page": int(args[4]),
         }
-        
-        if args[0] == 'undo':
-            data['page'] -= 1
-        elif args[0] == 'next':
-            data['page'] += 1
-        elif args[0] == 'next_glava':
-            data['glava'] += 1
-        elif args[0] == 'next_tom':
-            data['tom'] += 1
+
+        if args[0] == "undo":
+            data["page"] -= 1
+        elif args[0] == "next":
+            data["page"] += 1
+        elif args[0] in {"next_chapter", "next_glava"}:
+            data["chapter"] += 1
+        elif args[0] in {"next_volume", "tom"}:
+            data["volume"] += 1
 
         _markup = self.inline.generate_markup(
             [
                 [
-                    {"text": "◀️", "data": f"undo/{data['name']}/{data['tom']}/{data['glava']}/{data['page']}"},
-                    {"text": "▶️", "data": f"next/{data['name']}/{data['tom']}/{data['glava']}/{data['page']}"}
+                    {
+                        "text": "◀️",
+                        "data": f"undo/{data['name']}/{data['volume']}/{data['chapter']}/{data['page']}",
+                    },
+                    {
+                        "text": "▶️",
+                        "data": f"next/{data['name']}/{data['volume']}/{data['chapter']}/{data['page']}",
+                    },
                 ],
                 [
-                    {"text": "След.глава ⏭", "data": f"next_glava/{data['name']}/{data['tom']}/{data['glava']}/{data['page']}"}
+                    {
+                        "text": "След.глава ⏭",
+                        "data": f"next_chapter/{data['name']}/{data['volume']}/{data['chapter']}/{data['page']}",
+                    }
                 ],
                 [
-                    {"text": "След.том ⏭", "data": f"next_tom/{data['name']}/{data['tom']}/{data['glava']}/{data['page']}"}
-                ]
+                    {
+                        "text": "След.том ⏭",
+                        "data": f"next_volume/{data['name']}/{data['volume']}/{data['chapter']}/{data['page']}",
+                    }
+                ],
             ]
         )
 
         r = await self.requests(data)
         await self.inline.bot.send_photo(
-            self._tg_id,
-            f"{r['image']}",
-            f"{r['page']}",
-            reply_markup=_markup
+            self._tg_id, f"{r['image']}", f"{r['page']}", reply_markup=_markup
         )

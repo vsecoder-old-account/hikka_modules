@@ -22,9 +22,10 @@ from ..inline.types import InlineQuery
 
 from telethon import TelegramClient
 
+
 @loader.tds
 class MemsGaleryMod(loader.Module):
-    """Sends mems pictures"""
+    """Sends meme pictures"""
 
     strings = {"name": "MemsGalery"}
 
@@ -35,9 +36,12 @@ class MemsGaleryMod(loader.Module):
 
     def __init__(self):
         self.config = loader.ModuleConfig(
-            "upload_url",
-            "https://0x0.st",
-            lambda m: self.strings("cfg_searc_url", m),
+            loader.ConfigValue(
+                "upload_url",
+                "https://0x0.st",
+                "Upload API",
+                validator=loader.validators.Link(),
+            ),
         )
         self.name = self.strings["name"]
 
@@ -56,7 +60,7 @@ class MemsGaleryMod(loader.Module):
             return oxo.text
 
     async def memscmd(self, message: Message):
-        """Send mems picture"""
+        """Send meme picture"""
         await self.inline.gallery(
             caption=lambda: f'<i>{random.choice(["Dev @vsecoder", "All memes from @ffmemesbot", "Thk @skillzmeow and @shadow_hikka"])}</i>',
             message=message,
@@ -66,7 +70,7 @@ class MemsGaleryMod(loader.Module):
 
     async def mems_inline_handler(self, query: InlineQuery):
         """
-        Send mems
+        Send memes
         """
         await self.inline.query_gallery(
             query,
@@ -75,11 +79,10 @@ class MemsGaleryMod(loader.Module):
                     "title": "🤣 MemsGalery",
                     "description": "Send mems photo",
                     "next_handler": self.photo,
-                    "thumb_handler": self.photo,  # Optional
-                    "caption": lambda: f'<i>{random.choice(["Dev @vsecoder", "All memes from @ffmemesbot", "Thk @skillzmeow and @shadow_hikka"])}</i>',  # Optional
-                    # Because of ^ this lambda, face will be generated every time the photo is switched
-                    # "caption": f"<i>Enjoy! {utils.ascii_face()}</i>",
-                    # If you make it without lambda ^, it will be generated once
+                    "thumb_handler": self.photo,
+                    "caption": lambda: (
+                        f'<i>{random.choice(["Dev @vsecoder", "All memes from @ffmemesbot", "Thk @skillzmeow and @shadow_hikka"])}</i>'
+                    ),
                 }
             ],
         )

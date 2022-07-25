@@ -28,13 +28,13 @@ class GoogleItMod(loader.Module):
     strings = {
         "name": "Google it",
         "cfg_searc_url": "Searcher",
-        "answer": "😒 I advise you to start looking in the search engine: ",
+        "answer": "😒 I advise you to look in the search engine first: ",
         "error": "Error!\n .googleit | text",
     }
 
     strings_ru = {
         "cfg_searc_url": "Поисковик",
-        "answer": "😒 Советую поискать для начала в поисковике: ",
+        "answer": "😒 Советую для начала заглянуть в поисковик: ",
         "error": "Ошибка!\n \n .googleit | text",
     }
 
@@ -49,25 +49,15 @@ class GoogleItMod(loader.Module):
     async def client_ready(self, client, db):
         self._client = client
 
-
     @loader.unrestricted
     @loader.ratelimit
     async def googleitcmd(self, message):
         """
-         {text} - text to search
+        {text} - text to search
         """
         args = message.text.replace(f"{self.get_prefix()}googleit ", "")
         if args:
-            if args:
-                url = self.config["search_url"].format(
-                    query=args
-                ).replace(" ", "+")
-            else:
-                await utils.answer(message, self.strings["error"])
-                await asyncio.sleep(5)
-                await message.delete()
-                return
-
+            url = self.config["search_url"].format(query=args).replace(" ", "+")
             await utils.answer(message, f'{self.strings["answer"]}{url}')
         else:
             await utils.answer(message, self.strings["error"])

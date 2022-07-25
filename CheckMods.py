@@ -9,6 +9,9 @@
     This program is free software; you can redistribute it and/or modify 
 
 """
+
+import contextlib
+
 # meta developer: @vsecoder_m
 # meta pic: https://img.icons8.com/color/344/antivirus-scanner--v1.png
 
@@ -24,49 +27,58 @@ logger = logging.getLogger(__name__)
 
 checker_regex = {
     "critical": [
-        {"command": r"DeleteAccountRequest", "perms": "delete account"},
-        {"command": r"edit_2fa", "perms": "change 2FA password"},
-        {"command": r"get_me", "perms": "presumably get your profile account data"},
-        {"command": r"disconnect", "perms": "disconnect account"},
-        {"command": r"log_out", "perms": "disconnect account"},
-        {"command": r"ResetAuthorizationRequest", "perms": "kill account sessions"},
-        {"command": r"GetAuthorizationsRequest", "perms": "get telegram api_id and api_hash"},
-        {"command": r"AddRequest", "perms": "get telegram api_id and api_hash"},
-        {"command": r"pyarmor", "perms": "all(obfuscated script)"},
-        {"command": r"pyrogram", "perms": "another tg client"},
-        {"command": r"system", "perms": "presumably eval commands"},
-        {"command": r"eval", "perms": "presumably eval python code"},
-        {"command": r"exec", "perms": "presumably exec python code"},
-        {"command": r"sessions", "perms": "get all sessions data, delete sessoins, copy and send sessions"},
-        {"command": r"subprocess", "perms": "eval commands"},
-        {"command": r"torpy", "perms": "download viruses"},
-        {"command": r"httpimport", "perms": "import malicious scripts"},
+        {"command": "DeleteAccountRequest", "perms": "delete account"},
+        {"command": "edit_2fa", "perms": "change 2FA password"},
+        {"command": "get_me", "perms": "presumably get your profile account data"},
+        {"command": "disconnect", "perms": "disconnect account"},
+        {"command": "log_out", "perms": "disconnect account"},
+        {"command": "ResetAuthorizationRequest", "perms": "kill account sessions"},
+        {
+            "command": "GetAuthorizationsRequest",
+            "perms": "get telegram api_id and api_hash",
+        },
+        {"command": "AddRequest", "perms": "get telegram api_id and api_hash"},
+        {"command": "pyarmor", "perms": "all(obfuscated script)"},
+        {"command": "pyrogram", "perms": "another tg client"},
+        {"command": "system", "perms": "presumably eval commands"},
+        {"command": "eval", "perms": "presumably eval python code"},
+        {"command": "exec", "perms": "presumably exec python code"},
+        {
+            "command": "sessions",
+            "perms": "get all sessions data, delete sessoins, copy and send sessions",
+        },
+        {"command": "subprocess", "perms": "eval commands"},
+        {"command": "torpy", "perms": "download viruses"},
+        {"command": "httpimport", "perms": "import malicious scripts"},
     ],
     "warn": [
-        {"command": r"list_sessions", "perms": "get all account sessions"},
-        {"command": r"LeaveChannelRequest", "perms": "leave channel and chats"},
-        {"command": r"JoinChannelRequest", "perms": "join channel and chats"},
-        {"command": r"ChannelAdminRights", "perms": "edit channel and chats users perms"},
-        {"command": r"EditBannedRequest", "perms": "kick and ban users"},
-        {"command": r"remove", "perms": "presumably remove files"},
-        {"command": r"rmdir", "perms": "presumably remove dirs"},
-        {"command": r"telethon", "perms": "telethon funcs"},
-        {"command": r"get_response", "perms": "get telegram messages"},
+        {"command": "list_sessions", "perms": "get all account sessions"},
+        {"command": "LeaveChannelRequest", "perms": "leave channel and chats"},
+        {"command": "JoinChannelRequest", "perms": "join channel and chats"},
+        {
+            "command": "ChannelAdminRights",
+            "perms": "edit channel and chats users perms",
+        },
+        {"command": "EditBannedRequest", "perms": "kick and ban users"},
+        {"command": "remove", "perms": "presumably remove files"},
+        {"command": "rmdir", "perms": "presumably remove dirs"},
+        {"command": "telethon", "perms": "telethon funcs"},
+        {"command": "get_response", "perms": "get telegram messages"},
     ],
     "council": [
-        {"command": r"requests", "perms": "send requests"},
-        {"command": r"get_entity", "perms": "get entities"},
-        {"command": r"get_dialogs", "perms": "get dialogs"},
-        {"command": r"os", "perms": "presumably get os info"},
-        {"command": r"sys", "perms": "presumably get sys info"},
-        {"command": r"import", "perms": "import modules"},
-        {"command": r"client", "perms": "all client functions"},
-        {"command": r"send_message", "perms": "send messages"},
-        {"command": r"send_file", "perms": "send files"},
-        {"command": r"TelegramClient", "perms": "create new session"},
-        {"command": r"download_file", "perms": "download telegram files"},
-        {"command": r"ModuleConfig", "perms": "create configs"},
-    ]
+        {"command": "requests", "perms": "send requests"},
+        {"command": "get_entity", "perms": "get entities"},
+        {"command": "get_dialogs", "perms": "get dialogs"},
+        {"command": "os", "perms": "presumably get os info"},
+        {"command": "sys", "perms": "presumably get sys info"},
+        {"command": "import", "perms": "import modules"},
+        {"command": "client", "perms": "all client functions"},
+        {"command": "send_message", "perms": "send messages"},
+        {"command": "send_file", "perms": "send files"},
+        {"command": "TelegramClient", "perms": "create new session"},
+        {"command": "download_file", "perms": "download telegram files"},
+        {"command": "ModuleConfig", "perms": "create configs"},
+    ],
 }
 
 
@@ -76,17 +88,35 @@ class CheckModulesMod(loader.Module):
 
     strings = {
         "name": "Check module",
-        "cfg_lingva_url": "Check the module for suspicious features, scam, and find out what the module has access to",
-        "answer": ("🔍 <b>Module check complete</b>:\n\n⛔️ Criticals:\n{0}\n🟡 Warns:\n{1}\n✅ Councils:\n{2}"),
-        "component": (" ▪️ «<code>{0}</code>» in module have permissions on <i>{1}</i>"),
-        "error": "Error!\n\n.checkmod <module_link>\n.checkmod https://raw.githubusercontent.com/vsecoder/hikka_modules/main/googleit.py",
+        "cfg_lingva_url": (
+            "Check the module for suspicious features, scam, and find out what the"
+            " module has access to"
+        ),
+        "answer": (
+            "🔍 <b>Module check complete</b>:\n\n⛔️ Criticals:\n{0}\n🟡 Warns:\n{1}\n✅"
+            " Councils:\n{2}"
+        ),
+        "component": " ▪️ «<code>{0}</code>» in module have permissions on <i>{1}</i>",
+        "error": (
+            "Error!\n\n.checkmod <module_link>\n.checkmod"
+            " https://raw.githubusercontent.com/vsecoder/hikka_modules/main/googleit.py"
+        ),
     }
 
     strings_ru = {
-        "cfg_lingva_url": "Проверьте модуль на подозрительные возможности, скам, и узнайте к чему есть доступ у модуля",
-        "answer": ("🔍 <b>Проверка модуля завершена</b>:\n\n⛔️ Критические:\n{0}\n🟡 Предупреждения:\n{1}\n✅ Советы:\n{2}"),
-        "component": (" ▪️ «<code>{0}</code>» в модуле имеет разрешения на <i>{1}</i>"),
-        "error": "Ошибка!\n\n.checkmod <module_link>\n.checkmod https://raw.githubusercontent.com/vsecoder/hikka_modules/main/googleit.py",
+        "cfg_lingva_url": (
+            "Проверьте модуль на подозрительные возможности, скам, и узнайте к чему"
+            " есть доступ у модуля"
+        ),
+        "answer": (
+            "🔍 <b>Проверка модуля завершена</b>:\n\n⛔️ Критические:\n{0}\n🟡"
+            " Предупреждения:\n{1}\n✅ Советы:\n{2}"
+        ),
+        "component": " ▪️ «<code>{0}</code>» в модуле имеет разрешения на <i>{1}</i>",
+        "error": (
+            "Ошибка!\n\n.checkmod <module_link>\n.checkmod"
+            " https://raw.githubusercontent.com/vsecoder/hikka_modules/main/googleit.py"
+        ),
     }
 
     async def client_ready(self, client, db):
@@ -95,21 +125,50 @@ class CheckModulesMod(loader.Module):
 
     async def check_m(self, args):
         string = args
-        critical = ''
-        warn = ''
-        council = ''
-        for command in checker_regex['critical']:
-            r = re.search(command['command'], string)
-            if r is not None: critical = critical + self.strings["component"].format(command['command'], command['perms']) + '\n'
-        if critical == '': critical = ' ▪️ ➖\n'
-        for command in checker_regex['warn']:
-            r = re.search(command['command'], string)
-            if r is not None: warn = warn + self.strings["component"].format(command['command'], command['perms']) + '\n'
-        if warn == '': warn = ' ▪️ ➖\n'
-        for command in checker_regex['council']:
-            r = re.search(command['command'], string)
-            if r is not None: council = council + self.strings["component"].format(command['command'], command['perms']) + '\n'
-        if council == '': council = ' ▪️ ➖\n'
+        critical = ""
+        warn = ""
+        council = ""
+        for command in checker_regex["critical"]:
+            r = re.search(command["command"], string)
+            if r is not None:
+                critical = (
+                    critical
+                    + self.strings["component"].format(
+                        command["command"], command["perms"]
+                    )
+                    + "\n"
+                )
+
+        if not critical:
+            critical = " ▪️ ➖\n"
+
+        for command in checker_regex["warn"]:
+            r = re.search(command["command"], string)
+            if r is not None:
+                warn = (
+                    warn
+                    + self.strings["component"].format(
+                        command["command"], command["perms"]
+                    )
+                    + "\n"
+                )
+
+        if not warn:
+            warn = " ▪️ ➖\n"
+
+        for command in checker_regex["council"]:
+            r = re.search(command["command"], string)
+            if r is not None:
+                council = (
+                    council
+                    + self.strings["component"].format(
+                        command["command"], command["perms"]
+                    )
+                    + "\n"
+                )
+
+        if not council:
+            council = " ▪️ ➖\n"
 
         return self.strings["answer"].format(critical, warn, council, args)
 
@@ -117,20 +176,16 @@ class CheckModulesMod(loader.Module):
     @loader.ratelimit
     async def checkmodcmd(self, message):
         """
-         <module_link> or "reply file" or "send file" - start check module
+        <module_link> or "reply file" or "send file" - perform module check
         """
-        args = ''
-        try:
-            args = utils.get_args_raw(message)
-        except:
-            pass
+        args = utils.get_args_raw(message)
         if args:
-            try:
-                r = requests.get(args)
+            with contextlib.suppress(Exception):
+                r = await utils.run_sync(requests.get, args)
                 string = r.text
-                return await utils.answer(message, await self.check_m(string))
-            except:
-                pass
+                await utils.answer(message, await self.check_m(string))
+                return
+
         try:
             code_from_message = (
                 await self._client.download_file(message.media, bytes)
@@ -147,4 +202,4 @@ class CheckModulesMod(loader.Module):
             code_from_reply = ""
 
         args = code_from_message or code_from_reply
-        return await utils.answer(message, await self.check_m(args))
+        await utils.answer(message, await self.check_m(args))

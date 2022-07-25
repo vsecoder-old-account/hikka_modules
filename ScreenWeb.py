@@ -42,7 +42,7 @@ class GoogleItMod(loader.Module):
         self.config = loader.ModuleConfig(
             "url",
             "https://webshot.deam.io/{0}/?width={1}&height={2}?type=png&no_cookie_banners=true&lazy_load=true&destroy_screenshot=true&dark_mode=true&wait_for_event=load&delay=1000&accept_languages=ru&ttl=10",
-            lambda m: self.strings("cfg_url", m),
+            self.strings("cfg_url"),
         )
         self.name = self.strings["name"]
 
@@ -58,36 +58,30 @@ class GoogleItMod(loader.Module):
         .screenweb https://google.com/
         .screenweb https://vsecoder.ml/ 1920 1080
         """
-        args = utils.get_args_raw(message)
-        args = args.split(" ")
-        if args:
-            try:
-                print(args[0])
-            except:
-                return await utils.answer(message, self.strings["error"])
-
-            try:
-                width = args[2]
-                height = args[3]
-            except:
-                width = 1920
-                height = 1080
-
-            url = self.config['url'].format(
-                args[0],   # url
-                width,     # width
-                height     # height
-            )
-            photo = requests.get(url)
-            if not photo.ok:
-                await message.edit("<b>Что-то пошло не так..</b>")
-                return
-            photo = io.BytesIO(photo.content)
-            photo.name = "screen.png"
-            photo.seek(0)
-            await message.edit(self.strings["answer"].format(args[0],width,height))
-            await message.client.send_file(message.to_id, photo)
-        else:
+        args = utils.get_args(message)
+        if not args:
             await utils.answer(message, self.strings["error"])
-            await asyncio.sleep(5)
-            await message.delete()
+            return
+
+        try:
+            width = args[2]
+            height = args[3]
+        except Exception:
+            width = 1920
+            height = 1080
+
+        url = self.config["url"].format(args[0], width, height)
+        photo = await utils.run_sync(requests.get, url)
+
+        if not photo.ok:
+            await utils.answer(message, "<b>Что-то пошло не так..</b>")
+            return
+
+        photo = io.BytesIO(photo.content)
+        photo.name = "screen.png"
+        photo.seek(0)
+
+        await utils.answer(
+            message, self.strings["answer"].format(args[0], width, height)
+        )
+        await self.client.send_file(message.peer_id, photo)

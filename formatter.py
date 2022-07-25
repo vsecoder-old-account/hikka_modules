@@ -9,25 +9,35 @@
     This program is free software; you can redistribute it and/or modify 
 
 """
+
 # meta developer: @vsecoder_m
 # meta pic: https://img.icons8.com/fluency/344/pen-1.png
 
-__version__ = (1, 0, 0)
+__version__ = (1, 0, 1)
 
 import logging
 from .. import loader, utils
 
 import datetime as dt
 import re
+from telethon.tl.types import Message
 
 logger = logging.getLogger(__name__)
+
+
+def _copy_tl(o, **kwargs):
+    d = o.to_dict()
+    del d["_"]
+    d.update(kwargs)
+    return o.__class__(**d)
+
 
 @loader.tds
 class FormatterMod(loader.Module):
     """
-    Module for prettyfy formatting messages 🪛
+    Module for prettifying the formatting of messages 🪛
 
-    📌 To sample write:
+    📌 For example write:
     --------------------
     Hi, now is {now}, today is {today}, yesterday is {yesterday}, my id is {id}, username is @{username}...
 
@@ -39,50 +49,75 @@ class FormatterMod(loader.Module):
 
     P.S. "~" is a separator for keyboard and message.
          "/" is a separator for button and link.
-    
+
     """
 
-    strings = {
-        "name": "Formatter 🪛",
-    }
+    strings = {"name": "Formatter 🪛"}
 
     async def client_ready(self, client, db):
         self._client = client
-
         self.me = await client.get_me()
+        self.html = await self.import_lib(
+            "https://libs.hikariatama.ru/html.py", suspend_on_error=True
+        )
 
-    async def watcher(self, message):
-        try:
-            if message.from_id != self.me.id:
-                return
-            self.formats = {
-                "now": dt.datetime.now(),
-                "today": dt.date.today(),
-                "yesterday": dt.date.today() - dt.timedelta(days=1),
-                "id": self._client._tg_id,
-                "username": self.me.username,
-                "phone": self.me.phone,
-                "msg": message,
-            }
+    async def watcher(self, message: Message):
+        if (
+            not isinstance(message, Message)
+            or not message.out
+            or message.text.split()
+            and message.text.split()[0].lower() in self.allmodules.commands
+            or utils.remove_html(message.text).startswith(self.get_prefix())
+        ):
+            return
 
-            text = message.text
-            for i in self.formats:
-                to = "{"+i+"}"
-                if to in text:
-                    text = text.replace(to, str(self.formats[i]))
-            keyboard = []
-            if len(text.split('\n~\n')) == 2:
-                keyb = text.split('\n~\n')[1]
-                keyb = keyb.split('\n')
-                for key in keyb:
-                    if len(key.split(' $ ')) == 2:
-                        button = key.split(' $ ')[0]
-                        CLEANR = re.compile('<.*?>|&([a-z0-9]+|#[0-9]{1,6}|#x[0-9a-f]{1,6});')
-                        link = re.sub(CLEANR, '', key.split(' $ ')[1])
-                        keyboard.append([{'text': button, 'url': link}])
-                text = text.split('\n~\n')[0]
+        text = message.text
 
-            if text != message.text or keyboard != [[]]:
-                await utils.answer(message, text, reply_markup=keyboard)
-        except Exception as e:
-            pass
+        keyboard = []
+        if len(text.split("\n~\n")) == 2:
+            for key in message.raw_text.split("\n~\n")[1].split("\n"):
+                if len(key.split(" $ ")) == 2:
+                    button = key.split(" $ ")[0]
+                    CLEANR = re.compile(
+                        "<.*?>|&([a-z0-9]+|#[0-9]{1,6}|#x[0-9a-f]{1,6});"
+                    )
+                    link = re.sub(CLEANR, "", key.split(" $ ")[1])
+                    keyboard.append([{"text": button, "url": link}])
+
+        text = text.split("\n~\n")[0]
+
+        raw_cut_text = message.raw_text.split("\n~\n")[0]
+
+        entities = self.html.parse(message.text)[1]
+
+        for entity in entities.copy():
+            if not hasattr(entity, "offset") or not hasattr(entity, "length"):
+                continue
+
+            if entity.offset > len(raw_cut_text):
+                entities.remove(entity)
+                continue
+
+            if entity.offset + entity.length > len(raw_cut_text):
+                entities[entities.index(entity)] = _copy_tl(
+                    entity,
+                    length=len(raw_cut_text) - entity.offset,
+                )
+
+        text = self.html.unparse(raw_cut_text, entities)
+
+        formats = {
+            "now": dt.datetime.now(),
+            "today": dt.date.today(),
+            "yesterday": dt.date.today() - dt.timedelta(days=1),
+            "id": self._client.tg_id,
+            "username": self.me.username,
+            "phone": self.me.phone,
+            "msg": message,
+        }
+
+        for key, value in formats.items():
+            text = text.replace(key, utils.escape_html(value))
+
+        if text and text != message.text or keyboard and keyboard != [[]]:
+            await utils.answer(message, text, reply_markup=keyboard)
