@@ -48,7 +48,7 @@ class FormatterMod(loader.Module):
     --------------------
 
     P.S. "~" is a separator for keyboard and message.
-         "/" is a separator for button and link.
+         "$" is a separator for button and link.
 
     """
 
@@ -107,13 +107,13 @@ class FormatterMod(loader.Module):
         text = self.html.unparse(raw_cut_text, entities)
 
         formats = {
-            "now": dt.datetime.now(),
-            "today": dt.date.today(),
-            "yesterday": dt.date.today() - dt.timedelta(days=1),
-            "id": self._client.tg_id,
-            "username": self.me.username,
-            "phone": self.me.phone,
-            "msg": message,
+            "{now}": dt.datetime.now(),
+            "{today}": dt.date.today(),
+            "{yesterday}": dt.date.today() - dt.timedelta(days=1),
+            "{id}": self._client.tg_id,
+            "{username}": self.me.username,
+            "{phone}": self.me.phone,
+            "{msg}": message,
         }
 
         for key, value in formats.items():
